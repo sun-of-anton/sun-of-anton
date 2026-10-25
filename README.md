@@ -1,7 +1,6 @@
 <!-- ============================================================
-     PROFILE README for Anthony Hable
-     Still to fill in: YOUR_USERNAME, YOUR_LINKEDIN, YOUR_EMAIL
-     Lives in a public repo named exactly YOUR_USERNAME/YOUR_USERNAME
+     PROFILE README for Anthony Hable (sun-of-anton)
+     Lives in the public repo sun-of-anton/sun-of-anton
      ============================================================ -->
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=190&section=header&text=Hi%20there%2C%20I'm%20Anthony%20👋&fontSize=40&fontColor=ffffff&animation=fadeIn&fontAlignY=36&desc=AI%20Solutions%20Architect%20%E2%80%A2%20Software%20Engineer%20%E2%80%A2%20Navy%20Veteran&descAlignY=58&descSize=16" width="100%" alt="header"/>
@@ -10,12 +9,12 @@
   <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&pause=1200&color=36BCF7&center=true&vCenter=true&width=680&lines=Designing+agentic+AI+systems+that+actually+ship;AWS+GovCloud+architecture+for+locked-down+environments;From+Navy+EOD+to+aerospace+to+cloud+%E2%98%81%EF%B8%8F;Turning+manual+workflows+into+automated+ones" alt="typing tagline"/>
 </p>
 
+<!-- Images inside <picture> are not auto-linked by GitHub, so these badges stay unclickable -->
 <p align="center">
-  <a href="https://www.linkedin.com/in/YOUR_LINKEDIN/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white"/></a>
-  <a href="mailto:YOUR_EMAIL"><img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white"/></a>
-  <img src="https://img.shields.io/badge/AWS_Certified-FF9900?style=for-the-badge&logo=amazonwebservices&logoColor=white"/>
-  <img src="https://img.shields.io/badge/U.S._Navy_Veteran-000080?style=for-the-badge"/>
-  <img src="https://komarev.com/ghpvc/?username=YOUR_USERNAME&style=for-the-badge&color=36BCF7&label=PROFILE+VIEWS"/>
+  <a href="https://www.linkedin.com/in/ashable/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
+  <picture><img src="https://img.shields.io/badge/AWS_Certified-FF9900?style=for-the-badge&logo=amazonwebservices&logoColor=white" alt="AWS Certified"/></picture>
+  <picture><img src="https://img.shields.io/badge/U.S._Navy_Veteran-000080?style=for-the-badge" alt="U.S. Navy Veteran"/></picture>
+  <picture><img src="https://komarev.com/ghpvc/?username=sun-of-anton&style=for-the-badge&color=36BCF7&label=PROFILE+VIEWS" alt="Profile views"/></picture>
 </p>
 
 ---
@@ -36,18 +35,18 @@
 ### 🛠️ Tools I reach for
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=aws,python,postgres,linux,bash,git,github,azure,matlab,vscode&perline=10" alt="tech stack"/>
+  <picture><img src="https://skillicons.dev/icons?i=aws,python,postgres,linux,bash,git,github,azure,matlab,vscode&perline=10" alt="tech stack"/></picture>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Lambda-FF9900?style=flat-square&logo=awslambda&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Step_Functions-E7157B?style=flat-square&logo=amazonwebservices&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Glue-8C4FFF?style=flat-square&logo=amazonwebservices&logoColor=white"/>
-  <img src="https://img.shields.io/badge/S3-569A31?style=flat-square&logo=amazons3&logoColor=white"/>
-  <img src="https://img.shields.io/badge/IAM_%26_KMS-DD344C?style=flat-square&logo=amazonwebservices&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Azure_DevOps-0078D7?style=flat-square&logo=azuredevops&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Power_Automate-0066FF?style=flat-square&logo=powerautomate&logoColor=white"/>
-  <img src="https://img.shields.io/badge/LabVIEW-FFDB00?style=flat-square&logoColor=black"/>
+  <picture><img src="https://img.shields.io/badge/Lambda-FF9900?style=flat-square&logo=awslambda&logoColor=white" alt="Lambda"/></picture>
+  <picture><img src="https://img.shields.io/badge/Step_Functions-E7157B?style=flat-square&logo=amazonwebservices&logoColor=white" alt="Step Functions"/></picture>
+  <picture><img src="https://img.shields.io/badge/Glue-8C4FFF?style=flat-square&logo=amazonwebservices&logoColor=white" alt="Glue"/></picture>
+  <picture><img src="https://img.shields.io/badge/S3-569A31?style=flat-square&logo=amazons3&logoColor=white" alt="S3"/></picture>
+  <picture><img src="https://img.shields.io/badge/IAM_%26_KMS-DD344C?style=flat-square&logo=amazonwebservices&logoColor=white" alt="IAM and KMS"/></picture>
+  <picture><img src="https://img.shields.io/badge/Azure_DevOps-0078D7?style=flat-square&logo=azuredevops&logoColor=white" alt="Azure DevOps"/></picture>
+  <picture><img src="https://img.shields.io/badge/Power_Automate-0066FF?style=flat-square&logo=powerautomate&logoColor=white" alt="Power Automate"/></picture>
+  <picture><img src="https://img.shields.io/badge/LabVIEW-FFDB00?style=flat-square&logoColor=black" alt="LabVIEW"/></picture>
 </p>
 
 ---
@@ -92,11 +91,7 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 
 ### 🚀 Featured repos
 
-<!-- Swap in your best 2–4 public repos -->
-<p align="center">
-  <a href="https://github.com/YOUR_USERNAME/REPO_ONE"><img src="https://github-readme-stats.vercel.app/api/pin/?username=YOUR_USERNAME&repo=REPO_ONE&hide_border=true&theme=tokyonight"/></a>
-  <a href="https://github.com/YOUR_USERNAME/REPO_TWO"><img src="https://github-readme-stats.vercel.app/api/pin/?username=YOUR_USERNAME&repo=REPO_TWO&hide_border=true&theme=tokyonight"/></a>
-</p>
+<p align="center"><i>🚧 Coming soon — public projects are on the way.</i></p>
 
 ---
 
@@ -119,23 +114,7 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 
 ### 📈 By the numbers
 
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api?username=YOUR_USERNAME&show_icons=true&count_private=true&include_all_commits=true&hide_border=true&theme=tokyonight"/>
-    <img height="165" src="https://github-readme-stats.vercel.app/api?username=YOUR_USERNAME&show_icons=true&count_private=true&include_all_commits=true&hide_border=true&theme=default" alt="GitHub stats"/>
-  </picture>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=YOUR_USERNAME&layout=compact&hide_border=true&theme=tokyonight"/>
-    <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=YOUR_USERNAME&layout=compact&hide_border=true&theme=default" alt="Top languages"/>
-  </picture>
-</p>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://streak-stats.demolab.com?user=YOUR_USERNAME&theme=tokyonight&hide_border=true"/>
-    <img src="https://streak-stats.demolab.com?user=YOUR_USERNAME&hide_border=true" alt="Streak"/>
-  </picture>
-</p>
+<p align="center"><i>🚧 Coming soon.</i></p>
 
 ---
 
@@ -149,8 +128,8 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 ### 🐍 Contributions, eaten
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_USERNAME/output/snake-dark.svg"/>
-  <img alt="contribution snake" src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_USERNAME/output/snake.svg"/>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/sun-of-anton/sun-of-anton/output/snake-dark.svg"/>
+  <img alt="contribution snake" src="https://raw.githubusercontent.com/sun-of-anton/sun-of-anton/output/snake.svg"/>
 </picture>
 
 ---
@@ -166,4 +145,4 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 
 </details>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:2c5364,50:203a43,100:0f2027&height=100&section=footer" width="100%" alt="footer"/>
+<picture><img src="https://capsule-render.vercel.app/api?type=waving&color=0:2c5364,50:203a43,100:0f2027&height=100&section=footer" width="100%" alt="footer"/></picture>
