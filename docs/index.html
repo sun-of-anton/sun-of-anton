@@ -356,8 +356,8 @@
       await narrate('☎  ring… ring…');
       await talk('TANK', 'Operator. So what do you need? Besides a miracle.');
       print(`<span class="dim">programs on the construct:</span>
-  <span class="hi">who are you</span>     who is Anthony?
-  <span class="hi">where are you</span>   where is Anthony?
+  <span class="hi">who am i</span>        who is Anthony?
+  <span class="hi">where am i</span>      where is Anthony?
   <span class="hi">career</span>          the path he walked
   <span class="hi">skills</span>          load the training programs
   <span class="hi">certs</span>           the sparring program
@@ -465,7 +465,7 @@
       return null;
     },
     // old names still work, just not advertised
-    whoami: () => CMDS.whoareyou(), now: () => CMDS.whereareyou(),
+    whoami: () => CMDS.whoareyou(), whereami: () => CMDS.whereareyou(), now: () => CMDS.whereareyou(),
     contact: () => CMDS.findme(), contacts: () => CMDS.findme(),
     whoisanthony: () => CMDS.whoareyou(), whoishe: () => CMDS.whoareyou(),
     whereishe: () => CMDS.whereareyou(), whereisanthony: () => CMDS.whereareyou(),
