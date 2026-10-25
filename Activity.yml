@@ -1,0 +1,23 @@
+# Save as .github/workflows/activity.yml in your YOUR_USERNAME/YOUR_USERNAME repo
+# Fills the <!--START_SECTION:activity--> block with your 5 latest public events.
+name: Update recent activity
+
+on:
+  schedule:
+    - cron: "41 */6 * * *"   # every 6 hours
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  activity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jamesgeorge007/github-activity-readme@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          MAX_LINES: 5
+          COMMIT_MSG: "chore: refresh recent activity"
