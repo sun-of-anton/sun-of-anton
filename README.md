@@ -95,20 +95,24 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 
 ---
 
-### 🧬 The path here
+### 🧬 The path here (a non-linear speedrun)
+
+> Most people pick a lane. I tried about nine of them first.
 
 ```text
-2004 ─ U.S. Navy EOD Technician ── two deployments to Bahrain
-2011 ─ Veterans Health Administration ── SharePoint LMS & help desk systems
-2013 ─ AECOM ── transportation, then fire protection engineering (West Point)
-2015 ─ L3 Technologies / TECOMSYS ── aerospace & comms hardware
-2018 ─ Boeing ── structural design + engineering workflow automation
-2020 ─ Northrop Grumman ── Software Engineer II, test systems & V&V
-2023 ─ Velocity Consulting ── Boeing 3DEXPERIENCE enablement
-2024 ─ HII ── product owner, DevOps & air-gapped dev infrastructure
-2025 ─ CACI ── AWS Solutions Architect, GovCloud IL5
-2026 ─ Norfolk Naval Shipyard ── AWS Solutions Architect & agentic AI  ◀ now
+2004 ─ 💣 Navy EOD Technician ──────── defused bombs. peaked early?
+2011 ─ 🏥 Veterans Health Admin ────── discovered SharePoint. it discovered me back.
+2013 ─ 🛣️  AECOM ───────────────────── roads, drainage, then fire sprinklers at West Point
+2015 ─ 🛰️  L3 / TECOMSYS ───────────── made satellite parts 25% smaller. also antennas. same time.
+2018 ─ ✈️  Boeing ──────────────────── designed airplane parts, secretly automated everyone's job
+2020 ─ 🚀 Northrop Grumman ─────────── first "Software Engineer" title. the plot thickens.
+2023 ─ 🎓 Velocity Consulting ──────── taught Boeing a new CAD platform, made AI do the voiceovers
+2024 ─ 🔌 HII ─────────────────────── stood up an air-gapped server. it did not have Wi-Fi. on purpose.
+2025 ─ ☁️  CACI ────────────────────── finally put it all in the cloud (GovCloud, IL5)
+2026 ─ 🤖 Norfolk Naval Shipyard ───── AWS architect building agentic AI  ◀ found the groove
 ```
+
+<sub>Turns out every detour was a side quest. Bombs taught precision, aerospace taught testing, SharePoint taught me that every manual process is a script waiting to happen.</sub>
 
 ---
 
