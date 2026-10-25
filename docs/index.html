@@ -90,6 +90,85 @@
   const redXY = () => ({x: red.col * CELL + CELL / 2, y: red.head * CELL + CELL / 2});
   const say = s => { hintEl.innerHTML = s; hintEl.style.opacity = s ? .85 : 0; };
 
+
+  // ---------- something pushing through the code: a height map bulges the rain toward the viewer ----------
+  let fx = null;   // {pts, t0, dur, done}
+  const smooth = (d) => d >= 1 ? 0 : (1 - d * d) * (1 - d * d);           // soft dome, 1 at center, 0 at edge
+  const blob = (x, y, cx, cy, rx, ry) => smooth(Math.hypot((x - cx) / rx, (y - cy) / ry));
+  const capsule = (x, y, ax, ay, bx, by, r) => {                          // rounded finger segment
+    const dx = bx - ax, dy = by - ay, t = Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / (dx * dx + dy * dy)));
+    return smooth(Math.hypot(x - (ax + t * dx), y - (ay + t * dy)) / r);
+  };
+  // Anonymous face (no features of any particular person): skull, brow, sockets, nose, lips, chin.
+  function faceHeight(u, v) {             // u,v in -1..1, v down
+    let h = blob(u, v, 0, -0.05, 0.62, 0.82) * 0.85;
+    h += blob(u, v, 0, -0.32, 0.45, 0.12) * 0.12;                         // brow ridge
+    h -= blob(u, v, -0.24, -0.17, 0.16, 0.11) * 0.42 + blob(u, v, 0.24, -0.17, 0.16, 0.11) * 0.42;   // eye sockets
+    h += blob(u, v, 0, 0.04, 0.09, 0.27) * 0.34 + blob(u, v, 0, 0.23, 0.13, 0.08) * 0.14;    // nose
+    h += blob(u, v, -0.3, 0.12, 0.18, 0.16) * 0.08 + blob(u, v, 0.3, 0.12, 0.18, 0.16) * 0.08; // cheeks
+    h += blob(u, v, 0, 0.42, 0.2, 0.06) * 0.1;  h -= blob(u, v, 0, 0.47, 0.2, 0.035) * 0.22; // lips, mouth line
+    h += blob(u, v, 0, 0.66, 0.24, 0.14) * 0.1;                                                // chin
+    return Math.max(0, h);
+  }
+  // An open hand pressing forward: palm, four fingers, thumb.
+  function handHeight(u, v) {
+    let h = blob(u, v, 0, 0.3, 0.42, 0.4) * 0.8;                          // palm
+    const tips = [[-0.38, -0.55], [-0.13, -0.78], [0.13, -0.8], [0.37, -0.6]];
+    const roots = [[-0.27, 0.0], [-0.09, -0.06], [0.09, -0.06], [0.26, 0.0]];
+    tips.forEach(([tx, ty], i) => { h = Math.max(h, capsule(u, v, roots[i][0], roots[i][1], tx, ty, 0.1) * 0.85); });
+    h = Math.max(h, capsule(u, v, 0.32, 0.4, 0.68, 0.05, 0.11) * 0.75);   // thumb
+    h += blob(u, v, 0, 0.3, 0.3, 0.3) * 0.15;
+    return Math.max(0, Math.min(1, h));
+  }
+  function startFx(kind, dur = 7) {
+    const g = Math.max(11, Math.round(CELL * 0.55));                       // finer grid than the rain
+    const size = Math.min(W * 0.5, H * (kind === 'face' ? 0.5 : 0.52));
+    const cx = W / 2, cy = H * (kind === 'face' ? 0.48 : 0.5), pts = [];
+    const fn = kind === 'face' ? faceHeight : handHeight;
+    for (let y = cy - size; y < cy + size; y += g) for (let x = cx - size; x < cx + size; x += g) {
+      const u = (x - cx) / size, v = (y - cy) / size, h = fn(u, v);
+      if (h < 0.03) continue;
+      const e = 0.02, nx = fn(u + e, v) - fn(u - e, v), ny = fn(u, v + e) - fn(u, v - e);
+      const light = Math.max(0, Math.min(1.25, 0.62 + (nx * 0.55 + ny * 0.8) / (2 * e) * 0.32));   // lit from upper-left: sockets & creases go dark
+      pts.push({x, y, h, light, ch: rnd(GLY)});
+    }
+    term.style.opacity = '.18';                                           // step the terminal back so the shape is visible
+    return new Promise(done => { fx = {pts, cx, cy, g, t0: now(), dur, done: () => { term.style.opacity = ''; done(); }}; });
+  }
+  function drawFx(T) {
+    if (!fx) return;
+    const t = (T - fx.t0) / fx.dur;
+    if (t >= 1) { fx.done(); fx = null; return; }
+    // rise, press (with a slow push-pull), recede
+    const a = t < 0.25 ? Math.pow(t / 0.25, 1.5) : t > 0.78 ? Math.pow((1 - t) / 0.22, 1.5) : 1 + Math.sin((t - 0.25) * 9) * 0.06;
+    const buckets = new Map();
+    for (const p of fx.pts) {
+      const d = p.h * a;
+      if (d < 0.04) continue;
+      x.globalAlpha = Math.min(.9, d * 1.4); x.fillStyle = '#000';
+      x.fillRect(p.x - fx.g / 2, p.y - fx.g / 2, fx.g, fx.g);            // the surface hides the rain behind it
+      const k = Math.min(5, Math.floor(d * 6));
+      if (!buckets.has(k)) buckets.set(k, []);
+      buckets.get(k).push([p, d]);
+    }
+    for (const [k, list] of buckets) {
+      x.font = `500 ${Math.round(fx.g * (0.78 + k * 0.1))}px "M PLUS 1 Code", "Courier New", monospace`;
+      for (const [p, d] of list) {
+        if (Math.random() < .01) p.ch = rnd(GLY);
+        const push = 1 + d * 0.12;                                           // bulge toward the viewer
+        const px = fx.cx + (p.x - fx.cx) * push, py = fx.cy + (p.y - fx.cy) * push;
+        const lum = Math.min(1, p.light * Math.min(1, d * 1.6));
+        if (lum < 0.16) continue;                                             // shadowed areas stay empty
+        const gch = Math.round(110 + 145 * lum), rb = Math.round(230 * Math.max(0, lum - 0.6) / 0.4);
+        x.globalAlpha = Math.min(1, 0.15 + lum);
+        x.fillStyle = `rgb(${rb},${gch},${Math.round(rb * 0.85)})`;
+        x.fillText(p.ch, px, py - fx.g / 2);
+      }
+    }
+    x.globalAlpha = 1;
+    x.font = `500 ${CELL - 7}px "M PLUS 1 Code", "Courier New", monospace`;
+  }
+
   function frame() {
     x.fillStyle = '#000'; x.fillRect(0, 0, W, H);
     x.textBaseline = 'top'; x.textAlign = 'center';
@@ -116,6 +195,8 @@
       }
     }
     x.globalAlpha = 1;
+
+    drawFx(T);
 
     // hint words (vertical)
     hints = hints.filter(hn => hn.row < rows + 2);
@@ -409,6 +490,22 @@
     },
 
     // hidden
+    areweslaves: async () => {
+      await talk('MORPHEUS', 'Like everyone else, you were born into bondage.');
+      await talk('MORPHEUS', 'Into a prison that you cannot smell or taste or touch.');
+      await narrate('the code goes quiet. something is pressing through it.');
+      await startFx('face', 7.5);
+      await talk('MORPHEUS', 'A prison for your mind.', 'red');
+      return null;
+    },
+    areweinthematrix: async () => {
+      await talk('MORPHEUS', 'The Matrix is everywhere. It is all around us.');
+      await talk('MORPHEUS', 'Even now, in this very room.');
+      await narrate('the screen bends. something reaches for you.');
+      await startFx('hand', 7);
+      await talk('MORPHEUS', 'Have you ever had a dream that you were so sure was real?');
+      return null;
+    },
     redpill: async () => {
       await talk('MORPHEUS', 'You take the red pill, you stay in Wonderland,', 'red');
       setColor('red'); spawnWord(W / 2, H * .22, 'WAKE UP, NEO');
@@ -463,6 +560,8 @@
 
   // ---- Morpheus listens: anything that isn't a command gets an answer ----
   const INTENTS = [
+    {re: /\b(are|r) (we|us|you|i) (all )?(slaves?|prisoners?|free)\b|\bslaves?\b/, run: async () => CMDS.areweslaves()},
+    {re: /\b(are|r) (we|you|i) (all )?(in|inside) (the )?matrix\b|\bin the matrix\b/, run: async () => CMDS.areweinthematrix()},
     {re: /\b(hir(e|ing)|job|role|position|recruit|opportunit|interview|resume|cv|freelance|contract|available|work with|team)\b/,
      run: async () => { await talk('MORPHEUS', "You're not here by accident. You're looking for him."); await talk('MORPHEUS', "I'll patch you through."); return CMDS.findme(); }},
     {re: /\b(aws|cloud|lambda|python|sql|postgres|stack|tech|skills?|code|coding|program(ming)?|language|devops|terraform|iac)\b/,
@@ -515,7 +614,7 @@
   const hist = []; let hi = 0;
   inp.addEventListener('keydown', async e => {
     if (e.key === 'Enter') {
-      if (busy) { skip = true; return; }   // Enter mid-scene skips to the end
+      if (busy) { skip = true; if (fx) { fx.done(); fx = null; } return; }   // Enter mid-scene skips to the end
       const raw = inp.value.trim(); inp.value = '';
       if (!raw) return;
       hist.push(raw); hi = hist.length;
