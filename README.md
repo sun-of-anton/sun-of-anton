@@ -3,7 +3,8 @@
      Lives in the public repo sun-of-anton/sun-of-anton
      ============================================================ -->
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=190&section=header&text=Hi%20there%2C%20I'm%20Anthony%20👋&fontSize=40&fontColor=ffffff&animation=fadeIn&fontAlignY=36&desc=AI%20Solutions%20Architect%20%E2%80%A2%20Software%20Engineer%20%E2%80%A2%20Navy%20Veteran&descAlignY=58&descSize=16" width="100%" alt="header"/>
+<!-- Matrix rain intro: letters fall and land to spell the header (assets/matrix-intro.svg) -->
+<picture><img src="./assets/matrix-intro.svg" width="100%" alt="Hi, I'm Anthony — AI Solutions Architect // Software Engineer"/></picture>
 
 <p align="center">
   <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&pause=1200&color=36BCF7&center=true&vCenter=true&width=680&lines=Designing+agentic+AI+systems+that+actually+ship;AWS+GovCloud+architecture+for+locked-down+environments;From+Navy+EOD+to+aerospace+to+cloud+%E2%98%81%EF%B8%8F;Turning+manual+workflows+into+automated+ones" alt="typing tagline"/>
@@ -12,7 +13,8 @@
 <!-- Images inside <picture> are not auto-linked by GitHub, so these badges stay unclickable -->
 <p align="center">
   <a href="https://www.linkedin.com/in/ashable/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
-  <picture><img src="https://img.shields.io/badge/AWS_Certified-FF9900?style=for-the-badge&logo=amazonwebservices&logoColor=white" alt="AWS Certified"/></picture>
+  <picture><img src="https://img.shields.io/badge/AWS_Certified_×3-FF9900?style=for-the-badge&logo=amazonwebservices&logoColor=white" alt="AWS Certified x3"/></picture>
+  <picture><img src="https://img.shields.io/badge/Coding_since-2015-2ea44f?style=for-the-badge&logo=gnubash&logoColor=white" alt="Coding since 2015"/></picture>
   <picture><img src="https://img.shields.io/badge/U.S._Navy_Veteran-000080?style=for-the-badge" alt="U.S. Navy Veteran"/></picture>
   <picture><img src="https://komarev.com/ghpvc/?username=sun-of-anton&style=for-the-badge&color=36BCF7&label=PROFILE+VIEWS" alt="Profile views"/></picture>
 </p>
@@ -28,7 +30,7 @@
 | 🤖 **Exploring** | How AI-assisted engineering changes the way teams design, debug and deliver software |
 | 💬 **Ask me about** | AWS GovCloud · serverless ETL · Infrastructure-as-Code · Python automation · agile product ownership |
 | 📍 **Based in** | Hampton Roads, Virginia · open to collaborating remotely |
-| ⚡ **Fun fact** | I defused bombs for the Navy before I ever deployed a Lambda |
+| ⌨️ **Coding since** | 2015 · on GitHub since 2026 — late to git, not to code |
 
 ---
 
@@ -89,6 +91,24 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 
 ---
 
+### 🎓 Certifications
+
+<p align="center">
+  <picture><img src="https://images.credly.com/images/0e284c3f-5164-4b21-8660-0d84737941bc/linkedin_thumb_image.png" width="110" alt="AWS Certified Solutions Architect – Associate"/></picture>
+  <picture><img src="https://images.credly.com/images/e5c85d7f-4e50-431e-b5af-fa9d9b0596e7/linkedin_thumb_image.png" width="110" alt="AWS Certified Data Engineer – Associate"/></picture>
+  <picture><img src="https://images.credly.com/images/00634f82-b07f-4bbd-a6bb-53de397fc3a6/linkedin_thumb_image.png" width="110" alt="AWS Certified Cloud Practitioner"/></picture>
+</p>
+
+<p align="center">
+  <picture><img src="https://img.shields.io/badge/AWS-Solutions_Architect_Associate-FF9900?style=flat-square&logo=amazonwebservices&logoColor=white" alt="AWS Solutions Architect Associate"/></picture>
+  <picture><img src="https://img.shields.io/badge/AWS-Data_Engineer_Associate-FF9900?style=flat-square&logo=amazonwebservices&logoColor=white" alt="AWS Data Engineer Associate"/></picture>
+  <picture><img src="https://img.shields.io/badge/AWS-Cloud_Practitioner-FF9900?style=flat-square&logo=amazonwebservices&logoColor=white" alt="AWS Cloud Practitioner"/></picture>
+  <picture><img src="https://img.shields.io/badge/CompTIA-Security%2B-C8202F?style=flat-square&logo=comptia&logoColor=white" alt="CompTIA Security+"/></picture>
+  <picture><img src="https://img.shields.io/badge/Scrum_Alliance-Certified_ScrumMaster-009FDA?style=flat-square&logo=scrumalliance&logoColor=white" alt="Certified ScrumMaster"/></picture>
+</p>
+
+---
+
 ### 🚀 Featured repos
 
 <p align="center"><i>🚧 Coming soon — public projects are on the way.</i></p>
@@ -129,6 +149,14 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 
 ---
 
+### 🏙️ Contributions, in 3D
+
+<!-- Generated daily by .github/workflows/profile-3d.yml -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./profile-3d-contrib/profile-night-rainbow.svg"/>
+  <img src="./profile-3d-contrib/profile-green-animate.svg" alt="3D contribution graph"/>
+</picture>
+
 ### 🐍 Contributions, eaten
 
 <picture>
@@ -145,7 +173,7 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 - **Constraints are design inputs.** Air-gapped servers, approved-tech lists and no internet aren't blockers — they're the spec.
 - **Automate the second time.** If I do something manually twice, the third time is a script.
 - **Own it end to end.** Roadmap, backlog, architecture, docs — I've often been the only one holding all of it.
-- **Discipline from EOD.** Precision, checklists and calm under pressure carried straight into engineering.
+- **Discipline from the Navy.** Precision, checklists and calm under pressure carried straight into engineering.
 
 </details>
 
