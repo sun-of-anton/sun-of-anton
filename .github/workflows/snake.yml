@@ -1,4 +1,4 @@
-# Save as .github/workflows/snake.yml in your YOUR_USERNAME/YOUR_USERNAME repo
+# Draws the contribution snake into the "output" branch daily
 name: Generate contribution snake
 
 on:

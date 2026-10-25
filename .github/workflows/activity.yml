@@ -1,5 +1,4 @@
-# Save as .github/workflows/activity.yml in your YOUR_USERNAME/YOUR_USERNAME repo
-# Fills the <!--START_SECTION:activity--> block with your 5 latest public events.
+# Fills the <!--START_SECTION:activity--> block with your 5 latest public events
 name: Update recent activity
 
 on:
