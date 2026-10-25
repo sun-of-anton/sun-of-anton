@@ -363,6 +363,7 @@
   <span class="hi">certs</span>           the sparring program
   <span class="hi">find me</span>         get patched through
   <span class="hi">speed</span> &lt;0.2–4&gt;     bend time
+  <span class="hi">clear</span>           déjà vu
   <span class="hi">exit</span>            get out`);
       await wait(300);
       await talk('TANK', "Some programs aren't on the list. You'll have to find those yourself.");
@@ -481,6 +482,15 @@
       return null;
     },
 
+    clear: async () => {
+      await narrate('a black cat walks past the screen.');
+      await narrate('a black cat walks past the screen.');
+      await talk('TRINITY', 'Déjà vu is usually a glitch in the Matrix. It happens when they change something.');
+      await wait(900);
+      out.innerHTML = '';
+      return null;
+    },
+
     exit: async () => {
       await talk('TANK', "Hold on. I'm getting you out.");
       await narrate('☎  ring… ring…  you pick up the phone.');
@@ -578,6 +588,7 @@
     {re: /\b(thanks?|thank you|thx|cool|awesome|nice|dope|sick|love (it|this))\b/, run: async () => { await talk('MORPHEUS', "Don't thank me. Walk through the door."); print('<span class="dim">(type </span><span class="hi">find me</span><span class="dim">)</span>'); return null; }},
     {re: /\b(hi|hello|hey|yo|sup|greetings|morpheus)\b/, run: async () => { await talk('MORPHEUS', "At last. I've been waiting for you."); await talk('MORPHEUS', 'Ask me anything. Or type help.'); return null; }},
     {re: /\b(help|how|what can|commands?|lost|stuck|confused)\b/, run: async () => CMDS.help()},
+    {re: /\b(cls|clean|wipe)\b/, run: async () => CMDS.clear()},
     {re: /\b(bye|goodbye|quit|logout|log off)\b/, run: async () => CMDS.exit()},
   ];
   const FALLBACK = [
