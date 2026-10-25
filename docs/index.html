@@ -39,7 +39,7 @@
 </div>
 <script>
 (() => {
-  const GLY = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜ0123456789Z:.=*+-<>¦|";
+  const GLY = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン0123456789Z=*+<>:";
   const rnd = a => a[Math.floor(Math.random() * a.length)];
   const c = document.getElementById('c'), x = c.getContext('2d');
   const hintEl = document.getElementById('hint');
@@ -76,8 +76,10 @@
     const startCol = Math.max(0, Math.min(cols - text.length, Math.round(px / CELL - text.length / 2)));
     const row = Math.max(1, Math.round(py / CELL));
     words.push({t: 0, hold: 0, letters: [...text].map((ch, i) => ({
-      ch, col: startCol + i, y: row - 8 - Math.random() * 14, target: row,
-      state: 'fall', flash: 0, vy: 0, wait: i * 4 + Math.random() * 10
+      ch, col: startCol + i, y: -1 - Math.random() * 6, target: row,          // starts at the top of the screen
+      state: 'fall', flash: 0, vy: 0, wait: i * 4 + Math.random() * 10,
+      delay: Math.random() * 25, v: 0.5 + Math.random() * 0.25, trailA: 1,
+      trail: Array.from({length: 8}, () => rnd(GLY))
     }))});
   }
   // A hint is a bright vertical word riding down a column.
@@ -91,7 +93,7 @@
   function frame() {
     x.fillStyle = '#000'; x.fillRect(0, 0, W, H);
     x.textBaseline = 'top'; x.textAlign = 'center';
-    x.font = `500 ${CELL - 4}px "M PLUS 1 Code", "Courier New", monospace`;
+    x.font = `500 ${CELL - 7}px "M PLUS 1 Code", "Courier New", monospace`;
     const T = now();
     const hinting = clicks >= 5;
 
@@ -153,12 +155,14 @@
 
     // clicked words
     words = words.filter(w => w.letters.some(L => L.state !== 'gone'));
-    x.font = `700 ${Math.round(CELL * 1.3)}px "M PLUS 1 Code", "Courier New", monospace`;
+    x.font = `700 ${CELL - 3}px "M PLUS 1 Code", "Courier New", monospace`;
     for (const w of words) {
       if (w.letters.every(L => L.state === 'landed')) w.hold++;
       for (const L of w.letters) {
         if (L.state === 'fall') {
-          L.y += 0.32 * speed + Math.random() * .12;
+          if (L.delay > 0) { L.delay--; continue; }
+          const left = L.target - L.y;
+          L.y += Math.max(0.12, Math.min(L.v, left * 0.12 + 0.12)) * speed;   // rains down, eases into place
           if (L.y >= L.target) { L.y = L.target; L.state = 'landed'; L.flash = 14; }
         } else if (L.state === 'landed' && w.hold > 170 && --L.wait < 0) {
           L.state = 'drop';
@@ -167,18 +171,33 @@
           if (L.y > rows) L.state = 'gone';
         }
         if (L.state === 'gone') continue;
+        // falling streak above each letter, fades once it lands
+        if (L.state !== 'fall') L.trailA = Math.max(0, L.trailA - 0.04);
+        if (L.trailA > 0) {
+          x.font = `500 ${CELL - 7}px "M PLUS 1 Code", "Courier New", monospace`;
+          for (let k = 1; k <= L.trail.length; k++) {
+            const r = (L.state === 'fall' ? L.y : L.target) - k; if (r < 0) continue;
+            if (Math.random() < .03) L.trail[k - 1] = rnd(GLY);
+            x.globalAlpha = L.trailA * (1 - k / (L.trail.length + 1)) * .9;
+            x.fillStyle = '#000'; x.fillRect(L.col * CELL, r * CELL, CELL, CELL);
+            x.fillStyle = color; x.fillText(L.trail[k - 1], L.col * CELL + CELL / 2, r * CELL);
+          }
+          x.globalAlpha = 1;
+          x.font = `700 ${CELL - 3}px "M PLUS 1 Code", "Courier New", monospace`;
+        }
         const dropFade = L.state === 'drop' ? Math.max(0, 1 - (L.y - L.target) / 14) : 1;
         x.globalAlpha = 1;
         x.fillStyle = '#000'; x.fillRect(L.col * CELL - 2, L.y * CELL - 2, CELL + 4, CELL * 1.4);
         x.globalAlpha = Math.max(.15, dropFade);
-        x.fillStyle = L.flash > 0 ? '#ffffff' : (L.state === 'landed' ? color : '#9cffb8');
+        x.fillStyle = L.flash > 0 || L.state === 'fall' ? '#eaffef' : (L.state === 'landed' ? color : '#9cffb8');
         if (L.flash > 0) L.flash--;
         const glyph = L.state === 'landed' ? L.ch : (Math.random() < .3 ? rnd(GLY) : L.ch);
-        x.fillText(L.state === 'fall' ? rnd(GLY) : glyph, L.col * CELL + CELL / 2, L.y * CELL);
+        if (L.state === 'fall' && (!L.fg || Math.random() < .15)) L.fg = rnd(GLY);
+        x.fillText(L.state === 'fall' ? L.fg : glyph, L.col * CELL + CELL / 2, L.y * CELL);
       }
     }
     x.globalAlpha = 1;
-    x.font = `500 ${CELL - 4}px "M PLUS 1 Code", "Courier New", monospace`;
+    x.font = `500 ${CELL - 7}px "M PLUS 1 Code", "Courier New", monospace`;
 
     // hints only after 5 clicks
     if (!found && hinting) {
@@ -192,7 +211,7 @@
     }
     requestAnimationFrame(frame);
   }
-  frame();
+  Promise.race([document.fonts.load('500 20px "M PLUS 1 Code"', 'アZ'), new Promise(r => setTimeout(r, 1500))]).then(frame);
 
   c.addEventListener('pointerdown', e => {
     if (!found && red) {
