@@ -44,7 +44,7 @@
   const c = document.getElementById('c'), x = c.getContext('2d');
   const hintEl = document.getElementById('hint');
   let W, H, CELL, cols, rows, columns = [], speed = 1, color = '#39ff7a', words = [], hints = [];
-  let found = false, lastHint = 0, pulses = [], clicks = 0, red = null, nextRed = performance.now() / 1000 + 4;
+  let lastT = 0, found = false, lastHint = 0, pulses = [], clicks = 0, red = null, nextRed = performance.now() / 1000 + 4;
 
   // ---------- crisp rain: device-pixel canvas, per-cell glyphs, explicit trails ----------
   function size() {
@@ -95,17 +95,18 @@
     x.textBaseline = 'top'; x.textAlign = 'center';
     x.font = `500 ${CELL - 7}px "M PLUS 1 Code", "Courier New", monospace`;
     const T = now();
+    const dt = lastT ? Math.min(3, (T - lastT) * 60) : 1; lastT = T;   // 1 = one 60Hz frame
     const hinting = clicks >= 5;
 
     // rain
     for (let i = 0; i < cols; i++) {
       const col = columns[i];
-      col.head += col.v * speed;
+      col.head += col.v * speed * dt;
       const h = Math.floor(col.head);
       if (h - col.len > rows) { columns[i] = newColumn(false); continue; }
       for (let k = 0; k <= col.len; k++) {
         const r = h - k; if (r < 0 || r >= rows) continue;
-        if (Math.random() < 0.0015) col.glyphs[r] = rnd(GLY);         // occasional flicker, not constant churn
+        if (Math.random() < 0.0015 * dt) col.glyphs[r] = rnd(GLY);         // occasional flicker, not constant churn
         const a = 1 - k / (col.len + 1);
         let fill = k === 0 ? '#eaffef' : color;
         if (a < .14) continue;
@@ -119,7 +120,7 @@
     // hint words (vertical)
     hints = hints.filter(hn => hn.row < rows + 2);
     for (const hn of hints) {
-      hn.row += hn.v;
+      hn.row += hn.v * dt;
       [...hn.text].forEach((ch, k) => {
         const r = Math.floor(hn.row) + k; if (r < 0 || r >= rows || ch === ' ') return;
         x.fillStyle = '#000'; x.fillRect(hn.col * CELL, r * CELL, CELL, CELL);
@@ -135,7 +136,7 @@
                glyphs: Array.from({length: rows + 20}, () => rnd(GLY))};
       }
       if (red) {
-        red.head = -2 + (T - red.born) / 6.5 * (rows + red.len + 3);   // always 6.5s top to bottom
+        red.head = -1 + (T - red.born) / 6.5 * (H / CELL + 1);   // the red head is on screen for 6.5s, any screen or refresh rate
         const h = Math.floor(red.head);
         for (let k = 0; k <= red.len; k++) {
           const r = h - k; if (r < 0 || r >= rows) continue;
@@ -148,7 +149,7 @@
         if (h - red.len > rows) { red = null; nextRed = T + (hinting ? 3 + Math.random() * 3 : 8 + Math.random() * 6); }
       }
     }
-    pulses = pulses.filter(p => (p.r += 1.6) < 90);
+    pulses = pulses.filter(p => (p.r += 1.6 * dt) < 90);
     for (const p of pulses) { x.strokeStyle = color; x.globalAlpha = 1 - p.r / 90; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 7); x.stroke(); }
     x.globalAlpha = 1;
 
@@ -156,27 +157,27 @@
     words = words.filter(w => w.letters.some(L => L.state !== 'gone'));
     x.font = `700 ${CELL - 7}px "M PLUS 1 Code", "Courier New", monospace`;
     for (const w of words) {
-      if (w.letters.every(L => L.state === 'landed')) w.hold++;
+      if (w.letters.every(L => L.state === 'landed')) w.hold += dt;
       for (const L of w.letters) {
         if (L.state === 'fall') {
-          if (L.delay > 0) { L.delay--; continue; }
+          if (L.delay > 0) { L.delay -= dt; continue; }
           const left = L.target - L.y;
-          L.y += Math.max(0.12, Math.min(L.v, left * 0.12 + 0.12)) * speed;   // rains down, eases into place
+          L.y += Math.max(0.12, Math.min(L.v, left * 0.12 + 0.12)) * speed * dt;   // rains down, eases into place
           if (L.y >= L.target) { L.y = L.target; L.state = 'landed'; L.flash = 14; }
-        } else if (L.state === 'landed' && w.hold > 170 && --L.wait < 0) {
+        } else if (L.state === 'landed' && w.hold > 170 && (L.wait -= dt) < 0) {
           L.state = 'drop';
         } else if (L.state === 'drop') {
-          L.vy += 0.012 * speed; L.y += L.vy;
+          L.vy += 0.012 * speed * dt; L.y += L.vy * dt;
           if (L.y > rows) L.state = 'gone';
         }
         if (L.state === 'gone') continue;
         // falling streak above each letter, fades once it lands
-        if (L.state !== 'fall') L.trailA = Math.max(0, L.trailA - 0.04);
+        if (L.state !== 'fall') L.trailA = Math.max(0, L.trailA - 0.04 * dt);
         if (L.trailA > 0) {
           x.font = `500 ${CELL - 7}px "M PLUS 1 Code", "Courier New", monospace`;
           for (let k = 1; k <= L.trail.length; k++) {
             const r = (L.state === 'fall' ? L.y : L.target) - k; if (r < 0) continue;
-            if (Math.random() < .03) L.trail[k - 1] = rnd(GLY);
+            if (Math.random() < .03 * dt) L.trail[k - 1] = rnd(GLY);
             x.globalAlpha = L.trailA * (1 - k / (L.trail.length + 1)) * .9;
             x.fillStyle = '#000'; x.fillRect(L.col * CELL, r * CELL, CELL, CELL);
             x.fillStyle = color; x.fillText(L.trail[k - 1], L.col * CELL + CELL / 2, r * CELL);
@@ -189,9 +190,9 @@
         x.fillStyle = '#000'; x.fillRect(L.col * CELL - 2, L.y * CELL - 2, CELL + 4, CELL * 1.4);
         x.globalAlpha = Math.max(.15, dropFade);
         x.fillStyle = L.flash > 0 || L.state === 'fall' ? '#eaffef' : (L.state === 'landed' ? color : '#9cffb8');
-        if (L.flash > 0) L.flash--;
+        if (L.flash > 0) L.flash -= dt;
         const glyph = L.state === 'landed' ? L.ch : (Math.random() < .3 ? rnd(GLY) : L.ch);
-        if (L.state === 'fall' && (!L.fg || Math.random() < .15)) L.fg = rnd(GLY);
+        if (L.state === 'fall' && (!L.fg || Math.random() < .15 * dt)) L.fg = rnd(GLY);
         x.fillText(L.state === 'fall' ? L.fg : glyph, L.col * CELL + CELL / 2, L.y * CELL);
       }
     }
