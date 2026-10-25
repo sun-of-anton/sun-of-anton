@@ -53,15 +53,15 @@
     c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
     c.style.width = W + 'px'; c.style.height = H + 'px';
     x.setTransform(dpr, 0, 0, dpr, 0, 0);
-    CELL = W < 600 ? 22 : 28;
+    CELL = W < 600 ? 26 : 34;
     cols = Math.ceil(W / CELL); rows = Math.ceil(H / CELL) + 1;
     columns = Array.from({length: cols}, () => newColumn(true));
   }
   function newColumn(scatter) {
     return {
       head: scatter ? Math.random() * rows * 1.5 - rows * .5 : -Math.random() * rows * .6,
-      v: 0.10 + Math.random() * 0.14,           // rows per frame (slow by default)
-      len: 8 + Math.floor(Math.random() * 22),
+      v: 0.07 + Math.random() * 0.09,           // rows per frame (slow by default)
+      len: 6 + Math.floor(Math.random() * 14),
       glyphs: Array.from({length: rows + 40}, () => rnd(GLY))
     };
   }
@@ -105,10 +105,11 @@
       if (h - col.len > rows) { columns[i] = newColumn(false); continue; }
       for (let k = 0; k <= col.len; k++) {
         const r = h - k; if (r < 0 || r >= rows) continue;
-        if (Math.random() < 0.004) col.glyphs[r] = rnd(GLY);         // occasional flicker, not constant churn
-        const a = Math.pow(1 - k / col.len, 1.25);
+        if (Math.random() < 0.0015) col.glyphs[r] = rnd(GLY);         // occasional flicker, not constant churn
+        const a = 1 - k / (col.len + 1);
         let fill = k === 0 ? '#eaffef' : color;
-        x.globalAlpha = k === 0 ? 1 : Math.max(.12, a);
+        if (a < .14) continue;
+        x.globalAlpha = k === 0 ? 1 : a;
         x.fillStyle = fill;
         x.fillText(col.glyphs[r], i * CELL + CELL / 2, r * CELL);
       }
@@ -130,7 +131,7 @@
     // the red one
     if (!found) {
       if (!red && T > nextRed) {
-        red = {col: 2 + Math.floor(Math.random() * Math.max(1, cols - 4)), head: -2, v: 0.11 + Math.random() * 0.06, len: 12,
+        red = {col: 2 + Math.floor(Math.random() * Math.max(1, cols - 4)), head: -2, v: 0.09 + Math.random() * 0.04, len: 10,
                glyphs: Array.from({length: rows + 20}, () => rnd(GLY))};
       }
       if (red) {
@@ -141,9 +142,7 @@
           x.fillStyle = '#000'; x.fillRect(red.col * CELL, r * CELL, CELL, CELL);
           x.globalAlpha = k === 0 ? 1 : Math.max(.2, Math.pow(1 - k / red.len, 1.1));
           x.fillStyle = k === 0 ? '#ff6a6a' : '#ff2a2a';
-          if (k === 0) { x.shadowColor = '#ff3b3b'; x.shadowBlur = 10; }
           x.fillText(red.glyphs[r], red.col * CELL + CELL / 2, r * CELL);
-          x.shadowBlur = 0;
         }
         x.globalAlpha = 1;
         if (h - red.len > rows) { red = null; nextRed = T + (hinting ? 3 + Math.random() * 3 : 8 + Math.random() * 6); }
@@ -155,7 +154,7 @@
 
     // clicked words
     words = words.filter(w => w.letters.some(L => L.state !== 'gone'));
-    x.font = `700 ${CELL - 3}px "M PLUS 1 Code", "Courier New", monospace`;
+    x.font = `700 ${CELL - 7}px "M PLUS 1 Code", "Courier New", monospace`;
     for (const w of words) {
       if (w.letters.every(L => L.state === 'landed')) w.hold++;
       for (const L of w.letters) {
@@ -183,7 +182,7 @@
             x.fillStyle = color; x.fillText(L.trail[k - 1], L.col * CELL + CELL / 2, r * CELL);
           }
           x.globalAlpha = 1;
-          x.font = `700 ${CELL - 3}px "M PLUS 1 Code", "Courier New", monospace`;
+          x.font = `700 ${CELL - 7}px "M PLUS 1 Code", "Courier New", monospace`;
         }
         const dropFade = L.state === 'drop' ? Math.max(0, 1 - (L.y - L.target) / 14) : 1;
         x.globalAlpha = 1;
