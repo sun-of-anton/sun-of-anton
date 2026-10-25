@@ -4,15 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Anthony Hable · The Matrix</title>
-<meta name="description" content="Anthony Hable — AI Solutions Architect & Software Engineer. Click the rain. Type 'help'.">
+<meta name="description" content="Anthony Hable — AI Solutions Architect & Software Engineer. Something in here isn't like the rest.">
 <style>
-  :root{--g:#39ff7a;--g2:#00c832;--dim:#0d3b1c;--bg:#020a04}
+  :root{--g:#39ff7a}
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;font-family:"Courier New",Courier,monospace;color:var(--g)}
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:"Courier New",Courier,monospace;color:var(--g)}
   canvas{position:fixed;inset:0;display:block;cursor:crosshair}
-  #hint{position:fixed;top:16px;left:50%;transform:translateX(-50%);font-size:13px;opacity:.75;letter-spacing:.08em;pointer-events:none;text-align:center;width:calc(100% - 32px);transition:opacity 1s}
-  #term{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);width:min(760px,calc(100% - 32px));max-height:52vh;display:flex;flex-direction:column;
-        background:rgba(2,12,5,.86);border:1px solid #145c2a;border-radius:10px;box-shadow:0 0 30px rgba(57,255,122,.12);backdrop-filter:blur(2px)}
+  #hint{position:fixed;top:16px;left:50%;transform:translateX(-50%);font-size:13px;letter-spacing:.08em;pointer-events:none;text-align:center;width:calc(100% - 32px);opacity:0;transition:opacity 1.2s;text-shadow:0 0 6px #000,0 0 2px #000}
+  #term{position:fixed;left:50%;bottom:16px;transform:translate(-50%,24px);width:min(760px,calc(100% - 32px));max-height:52vh;display:flex;flex-direction:column;
+        background:rgba(0,8,3,.9);border:1px solid #145c2a;border-radius:10px;box-shadow:0 0 30px rgba(57,255,122,.15);
+        opacity:0;pointer-events:none;transition:opacity .6s,transform .6s}
+  #term.open{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
   #bar{display:flex;gap:6px;align-items:center;padding:8px 12px;border-bottom:1px solid #0f3d1c;font-size:12px;opacity:.8}
   #bar i{width:10px;height:10px;border-radius:50%;display:inline-block}
   #out{padding:10px 14px;overflow-y:auto;font-size:14px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
@@ -27,92 +29,201 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="hint">click anywhere to disturb the rain · type <b>help</b> below</div>
-<div id="term">
+<div id="hint"></div>
+<div id="term" aria-hidden="true">
   <div id="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>&nbsp; anthony@matrix: ~ <button id="min" title="minimize">_</button></div>
   <div id="out"></div>
   <div id="line"><span>anthony@matrix:~$ </span><input id="in" autocomplete="off" spellcheck="false" aria-label="terminal input"></div>
 </div>
 <script>
 (() => {
-  const GLY = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワ0123456789$#@%&*+=<>";
+  const GLY = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜ0123456789Z:.=*+-<>¦|";
   const rnd = a => a[Math.floor(Math.random() * a.length)];
   const c = document.getElementById('c'), x = c.getContext('2d');
-  let W, H, FS = 18, cols, drops, speed = 1, color = '#39ff7a', words = [], sparks = [];
+  const hintEl = document.getElementById('hint');
+  let W, H, CELL, cols, rows, columns = [], speed = 1, color = '#39ff7a', words = [], hints = [];
+  let found = false, t0 = performance.now(), glitch = {c: 0, r: 0}, lastHint = 0, pulses = [];
 
+  // ---------- crisp rain: device-pixel canvas, per-cell glyphs, explicit trails ----------
   function size() {
-    W = c.width = innerWidth; H = c.height = innerHeight;
-    FS = W < 600 ? 14 : 18;
-    cols = Math.ceil(W / FS);
-    drops = Array.from({length: cols}, () => Math.random() * -H / FS);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
+    c.style.width = W + 'px'; c.style.height = H + 'px';
+    x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    CELL = W < 600 ? 16 : 20;
+    cols = Math.ceil(W / CELL); rows = Math.ceil(H / CELL) + 1;
+    columns = Array.from({length: cols}, () => newColumn(true));
+    placeGlitch();
+  }
+  function newColumn(scatter) {
+    return {
+      head: scatter ? Math.random() * rows * 1.5 - rows * .5 : -Math.random() * rows * .6,
+      v: 0.10 + Math.random() * 0.14,           // rows per frame (slow by default)
+      len: 8 + Math.floor(Math.random() * 22),
+      glyphs: Array.from({length: rows + 40}, () => rnd(GLY))
+    };
+  }
+  function placeGlitch() {
+    glitch.c = 3 + Math.floor(Math.random() * Math.max(1, cols - 6));
+    glitch.r = 3 + Math.floor(Math.random() * Math.max(1, rows * 0.55 - 3));
   }
   addEventListener('resize', size); size();
 
-  const WORDS = ["AWS","AGENTIC AI","PYTHON","GOVCLOUD","LAMBDA","IaC","SHIP IT","HELLO WORLD","ARCHITECT","AUTOMATE","STEP FUNCTIONS","POSTGRES","SECURITY+","SCRUM","NAVY","AEROSPACE","FOUND THE GROOVE"];
+  const WORDS = ["AWS","AGENTIC AI","PYTHON","GOVCLOUD","LAMBDA","SHIP IT","HELLO WORLD","ARCHITECT","AUTOMATE","POSTGRES","SECURITY+","FOUND THE GROOVE"];
+  const HINTS = ["FOLLOW THE WHITE RABBIT","LOOK CLOSER","A GLITCH IN THE MATRIX","DEJA VU","KNOCK KNOCK","SOMETHING IS WRONG","FIND THE GLITCH"];
 
-  // A clicked word: each letter falls in its own column and lands at the click row.
+  // Clicked words: letters drop out of the rain into place, hold, then fall out the bottom.
   function spawnWord(px, py, text) {
-    text = text || rnd(WORDS);
-    const startCol = Math.max(0, Math.min(cols - text.length, Math.round(px / FS - text.length / 2)));
-    const row = Math.round(py / FS);
-    words.push({
-      t: 0, life: 260,
-      letters: [...text].map((ch, i) => ({ch, col: startCol + i, y: row - 12 - Math.random() * 14, target: row, landed: false}))
-    });
-    for (let i = 0; i < 40; i++) {
-      const a = Math.random() * Math.PI * 2, v = 2 + Math.random() * 6;
-      sparks.push({x: px, y: py, vx: Math.cos(a) * v, vy: Math.sin(a) * v, ch: rnd(GLY), life: 40 + Math.random() * 30});
-    }
-    // ripple: reset nearby rain columns so they pour from the click
-    const cc = Math.round(px / FS);
-    for (let i = -6; i <= 6; i++) if (drops[cc + i] !== undefined) drops[cc + i] = row - Math.abs(i) * 2;
+    text = (text || rnd(WORDS)).toUpperCase();
+    const startCol = Math.max(0, Math.min(cols - text.length, Math.round(px / CELL - text.length / 2)));
+    const row = Math.max(1, Math.round(py / CELL));
+    words.push({t: 0, hold: 0, letters: [...text].map((ch, i) => ({
+      ch, col: startCol + i, y: row - 8 - Math.random() * 14, target: row,
+      state: 'fall', flash: 0, vy: 0, wait: i * 4 + Math.random() * 10
+    }))});
   }
+  // A hint is a bright vertical word riding down a column.
+  function dropHint(col, text) { hints.push({col, row: -text.length, text, v: 0.16 * speed}); }
 
-  c.addEventListener('pointerdown', e => { spawnWord(e.clientX, e.clientY); hint.style.opacity = 0; });
+  const elapsed = () => (performance.now() - t0) / 1000;
+  const say = s => { hintEl.innerHTML = s; hintEl.style.opacity = s ? .85 : 0; };
 
   function frame() {
-    x.fillStyle = 'rgba(2,10,4,0.08)';
-    x.fillRect(0, 0, W, H);
-    x.font = FS + 'px "Courier New", monospace';
+    x.fillStyle = '#000'; x.fillRect(0, 0, W, H);
+    x.textBaseline = 'top'; x.textAlign = 'center';
+    x.font = `${CELL - 2}px "Courier New", monospace`;
+    const T = elapsed();
+    const warm = !found && T > 30;   // after 30s the rain reacts to the glitch
+
+    // rain
     for (let i = 0; i < cols; i++) {
-      const y = drops[i] * FS;
-      x.fillStyle = '#d8ffe0'; x.fillText(rnd(GLY), i * FS, y);
-      x.fillStyle = color; x.globalAlpha = .55; x.fillText(rnd(GLY), i * FS, y - FS); x.globalAlpha = 1;
-      if (y > H && Math.random() > 0.975) drops[i] = 0;
-      drops[i] += speed * (0.55 + (i * 7919 % 10) / 22);
-    }
-    // sparks
-    sparks = sparks.filter(s => s.life-- > 0);
-    for (const s of sparks) {
-      s.x += s.vx; s.y += s.vy; s.vy += .15; s.vx *= .97;
-      x.globalAlpha = Math.min(1, s.life / 30); x.fillStyle = color; x.fillText(s.ch, s.x, s.y); x.globalAlpha = 1;
-    }
-    // landing words
-    words = words.filter(w => w.t++ < w.life);
-    x.font = 'bold ' + Math.round(FS * 1.5) + 'px "Courier New", monospace';
-    for (const w of words) {
-      const fade = w.t > w.life - 60 ? (w.life - w.t) / 60 : 1;
-      for (const L of w.letters) {
-        if (!L.landed) { L.y += 0.9 + Math.random() * .6; if (L.y >= L.target) { L.y = L.target; L.landed = true; L.flash = 12; } }
-        const ch = L.landed ? L.ch : rnd(GLY);
-        x.globalAlpha = fade;
-        x.shadowColor = color; x.shadowBlur = L.landed ? 14 : 4;
-        x.fillStyle = L.flash > 0 ? '#ffffff' : (L.landed ? color : '#9cffb8');
-        if (L.flash > 0) L.flash--;
-        x.fillText(ch, L.col * FS, L.y * FS);
-        x.shadowBlur = 0; x.globalAlpha = 1;
+      const col = columns[i];
+      col.head += col.v * speed;
+      const h = Math.floor(col.head);
+      if (h - col.len > rows) { columns[i] = newColumn(false); continue; }
+      for (let k = 0; k <= col.len; k++) {
+        const r = h - k; if (r < 0 || r >= rows) continue;
+        if (Math.random() < 0.004) col.glyphs[r] = rnd(GLY);         // occasional flicker, not constant churn
+        const a = Math.pow(1 - k / col.len, 1.6);
+        let fill = k === 0 ? '#eaffef' : color;
+        if (warm && i === glitch.c && Math.abs(r - glitch.r) < 2) fill = '#ff4b4b';
+        x.globalAlpha = k === 0 ? 1 : Math.max(.06, a);
+        x.fillStyle = fill;
+        x.fillText(col.glyphs[r], i * CELL + CELL / 2, r * CELL);
       }
     }
-    x.font = FS + 'px "Courier New", monospace';
+    x.globalAlpha = 1;
+
+    // hint words (vertical)
+    hints = hints.filter(hn => hn.row < rows + 2);
+    for (const hn of hints) {
+      hn.row += hn.v;
+      [...hn.text].forEach((ch, k) => {
+        const r = Math.floor(hn.row) + k; if (r < 0 || r >= rows || ch === ' ') return;
+        x.fillStyle = '#000'; x.fillRect(hn.col * CELL, r * CELL, CELL, CELL);
+        x.fillStyle = k === hn.text.length - 1 ? '#ffffff' : '#c8ffd6';
+        x.fillText(ch, hn.col * CELL + CELL / 2, r * CELL);
+      });
+    }
+
+    // the glitch
+    if (!found) {
+      const gx = glitch.c * CELL + CELL / 2, gy = glitch.r * CELL + CELL / 2;
+      const period = T > 30 ? 0.9 : 1.8;
+      const on = (T % period) < 0.12 || (T > 45 && (T % period) < 0.3);
+      x.fillStyle = '#000'; x.fillRect(glitch.c * CELL, glitch.r * CELL, CELL, CELL);
+      x.fillStyle = on ? (Math.random() < .5 ? '#ffffff' : '#ff4b4b') : '#1a3a22';
+      const s = on ? 6 : 3;
+      x.fillRect(gx - s / 2, gy - s / 2, s, s);
+      if (T > 45 && (T % 3) < 0.02) pulses.push({x: gx, y: gy, r: 4});
+    }
+    pulses = pulses.filter(p => (p.r += 1.6) < 90);
+    for (const p of pulses) { x.strokeStyle = color; x.globalAlpha = 1 - p.r / 90; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 7); x.stroke(); }
+    x.globalAlpha = 1;
+
+    // clicked words
+    words = words.filter(w => w.letters.some(L => L.state !== 'gone'));
+    x.font = `bold ${Math.round(CELL * 1.35)}px "Courier New", monospace`;
+    for (const w of words) {
+      if (w.letters.every(L => L.state === 'landed')) w.hold++;
+      for (const L of w.letters) {
+        if (L.state === 'fall') {
+          L.y += 0.32 * speed + Math.random() * .12;
+          if (L.y >= L.target) { L.y = L.target; L.state = 'landed'; L.flash = 14; }
+        } else if (L.state === 'landed' && w.hold > 170 && --L.wait < 0) {
+          L.state = 'drop';
+        } else if (L.state === 'drop') {
+          L.vy += 0.012 * speed; L.y += L.vy;
+          if (L.y > rows) L.state = 'gone';
+        }
+        if (L.state === 'gone') continue;
+        const dropFade = L.state === 'drop' ? Math.max(0, 1 - (L.y - L.target) / 14) : 1;
+        x.globalAlpha = 1;
+        x.fillStyle = '#000'; x.fillRect(L.col * CELL - 2, L.y * CELL - 2, CELL + 4, CELL * 1.4);
+        x.globalAlpha = Math.max(.15, dropFade);
+        x.fillStyle = L.flash > 0 ? '#ffffff' : (L.state === 'landed' ? color : '#9cffb8');
+        if (L.flash > 0) L.flash--;
+        const glyph = L.state === 'landed' ? L.ch : (Math.random() < .3 ? rnd(GLY) : L.ch);
+        x.fillText(L.state === 'fall' ? rnd(GLY) : glyph, L.col * CELL + CELL / 2, L.y * CELL);
+      }
+    }
+    x.globalAlpha = 1;
+    x.font = `${CELL - 2}px "Courier New", monospace`;
+
+    // hint schedule (only while hunting)
+    if (!found && T - lastHint > 6) {
+      lastHint = T;
+      const nearGlitch = T > 15;
+      dropHint(nearGlitch ? glitch.c : Math.floor(Math.random() * cols), rnd(HINTS));
+    }
+    if (!found) {
+      if (T > 60) say('psst… stuck? press <b>~</b>');
+      else if (T > 45) say('it\'s pulsing. click it.');
+      else if (T > 30) say('watch where the rain turns red.');
+      else if (T > 2) say('something in here isn\'t like the rest.');
+    }
     requestAnimationFrame(frame);
   }
   frame();
-  setTimeout(() => spawnWord(W / 2, H * 0.3, "HELLO WORLD"), 700);
+
+  c.addEventListener('pointerdown', e => {
+    if (!found) {
+      const gx = glitch.c * CELL + CELL / 2, gy = glitch.r * CELL + CELL / 2;
+      const hit = Math.hypot(e.clientX - gx, e.clientY - gy) < (e.pointerType === 'touch' ? 40 : 26);
+      if (hit) return wake();
+    }
+    spawnWord(e.clientX, e.clientY);
+  });
+  addEventListener('keydown', e => { if (!found && (e.key === '~' || e.key === '`')) { e.preventDefault(); wake(); } });
 
   // ---------------- terminal ----------------
-  const out = document.getElementById('out'), inp = document.getElementById('in'), term = document.getElementById('term'), hint = document.getElementById('hint');
+  const out = document.getElementById('out'), inp = document.getElementById('in'), term = document.getElementById('term');
   const esc = s => s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
-  const print = (html, cls) => { const d = document.createElement('div'); if (cls) d.className = cls; d.innerHTML = html; out.appendChild(d); out.scrollTop = out.scrollHeight; };
+  const print = (html, cls) => { const d = document.createElement('div'); if (cls) d.className = cls; d.innerHTML = html; out.appendChild(d); out.scrollTop = out.scrollHeight; return d; };
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  let busy = false;
+  async function type(text, cls, ms = 45) {
+    const d = print('', cls);
+    for (const ch of text) { d.textContent += ch; out.scrollTop = out.scrollHeight; await sleep(ms); }
+  }
+
+  async function wake() {
+    if (found) return; found = true; busy = true;
+    say(''); hints = []; pulses = [];
+    const gx = glitch.c * CELL + CELL / 2, gy = glitch.r * CELL + CELL / 2;
+    for (let i = 0; i < 4; i++) setTimeout(() => pulses.push({x: gx, y: gy, r: 4}), i * 180);
+    spawnWord(W / 2, H * 0.22, 'WAKE UP');
+    term.classList.add('open'); term.setAttribute('aria-hidden', 'false');
+    await sleep(600);
+    await type('Wake up…', 'hi', 90); await sleep(900);
+    await type('The Matrix has you…', 'hi', 70); await sleep(900);
+    await type('Follow the white rabbit.', 'hi', 60); await sleep(700);
+    await type('Knock, knock.', 'hi', 80); await sleep(500);
+    print(`<span class="dim">you found the glitch. type </span><span class="hi">help</span><span class="dim"> to look around.</span>`);
+    busy = false;
+    if (matchMedia('(pointer:fine)').matches) inp.focus();
+  }
 
   const CMDS = {
     help: () => `available commands:
@@ -124,7 +235,7 @@
   <span class="hi">contact</span>    find me
   <span class="hi">rain</span> &lt;word&gt;  make the Matrix spell something
   <span class="hi">color</span> &lt;green|red|cyan|amber|white&gt;
-  <span class="hi">speed</span> &lt;0.2–4&gt;   rain speed
+  <span class="hi">speed</span> &lt;0.2–4&gt;   rain speed (default 1)
   <span class="hi">clear</span>      clear the screen
   <span class="hi">exit</span>       back to GitHub
 <span class="dim">(there may be a few hidden ones)</span>`,
@@ -154,42 +265,52 @@ now       agentic AI · AI-assisted engineering`,
 ✔ AWS Certified Cloud Practitioner                 (2026)
 ✔ CompTIA Security+                                (2026)
 ✔ Certified ScrumMaster                            (2022)`,
-    contact: () => `linkedin  <a href="https://www.linkedin.com/in/ashable/" target="_blank" rel="noopener">linkedin.com/in/ashable</a>
-github    <a href="https://github.com/sun-of-anton" target="_blank" rel="noopener">github.com/sun-of-anton</a>`,
-    rain: a => { const w = (a.join(' ') || rnd(WORDS)).toUpperCase().slice(0, 24); spawnWord(W / 2, H * (0.2 + Math.random() * .25), w); return `<span class="dim">raining "${esc(w)}"…</span>`; },
+    contact: async () => {
+      await type('☎  incoming transmission…', 'dim', 35); await sleep(500);
+      await type('the operator is patching you through from the Nebuchadnezzar.', 'dim', 25); await sleep(500);
+      await type('"I can only show you the door. You\'re the one that has to walk through it."', 'hi', 30); await sleep(400);
+      print(`
+  the door  →  <a href="https://www.linkedin.com/in/ashable/" target="_blank" rel="noopener">linkedin.com/in/ashable</a>
+  the code  →  <a href="https://github.com/sun-of-anton" target="_blank" rel="noopener">github.com/sun-of-anton</a>
+<span class="dim">signal lost. hang up the phone.</span>`);
+      spawnWord(W / 2, H * 0.22, 'COME FIND ME');
+      return null;
+    },
+    contacts: a => CMDS.contact(a),
+    rain: a => { const w = (a.join(' ') || rnd(WORDS)).slice(0, 24); spawnWord(W / 2, H * (0.18 + Math.random() * .2), w); return `<span class="dim">raining "${esc(w.toUpperCase())}"…</span>`; },
     color: a => { const m = {green:'#39ff7a', red:'#ff4b4b', cyan:'#38e8ff', amber:'#ffb000', white:'#e8ffe8'}; if (!m[a[0]]) return 'usage: color green|red|cyan|amber|white'; color = m[a[0]]; document.documentElement.style.setProperty('--g', color); return `<span class="dim">color → ${a[0]}</span>`; },
     speed: a => { const v = parseFloat(a[0]); if (!(v >= .2 && v <= 4)) return 'usage: speed 0.2–4'; speed = v; return `<span class="dim">speed → ${v}</span>`; },
     clear: () => { out.innerHTML = ''; return null; },
     exit: () => { setTimeout(() => location.href = 'https://github.com/sun-of-anton', 500); return 'unplugging…'; },
     // hidden
-    redpill: () => { CMDS.color(['red']); spawnWord(W/2, H*.3, "WAKE UP, NEO"); return `<span class="red">you stay in Wonderland. let's see how deep the rabbit hole goes.</span>`; },
+    redpill: () => { CMDS.color(['red']); spawnWord(W/2, H*.22, "WAKE UP, NEO"); return `<span class="red">you stay in Wonderland. let's see how deep the rabbit hole goes.</span>`; },
     bluepill: () => { setTimeout(() => location.href = 'https://github.com/sun-of-anton', 1500); return 'the story ends. you wake up in your bed (on GitHub)…'; },
+    spoon: () => { spawnWord(W/2, H*.22, "THERE IS NO SPOON"); return 'there is no spoon.'; },
     sudo: () => `<span class="red">nice try.</span> this incident will be reported.`,
-    'ls': () => `about.txt  career.log  certs/  secrets/  <span class="dim">(try cat)</span>`,
+    ls: () => `about.txt  career.log  certs/  secrets/  <span class="dim">(try cat)</span>`,
     cat: a => a[0] === 'secrets/' || a[0] === 'secrets' ? 'permission denied: IL5 says no.' : (CMDS[{'about.txt':'whoami','career.log':'career','certs/':'certs'}[a[0]]] || (() => `cat: ${esc(a[0]||'')}: no such file`))(),
     hello: () => 'Hello, World! 👋',
-    'follow': a => a.join(' ').includes('white rabbit') ? (spawnWord(W/2,H*.3,"KNOCK KNOCK"), '🐇 knock, knock.') : 'follow what?',
+    follow: a => a.join(' ').includes('white rabbit') ? (spawnWord(W/2,H*.22,"KNOCK KNOCK"), '🐇 knock, knock.') : 'follow what?',
     coffee: () => 'brewing… ☕ (agentic AI cannot do this yet)'
   };
 
-  print(`<span class="hi">Wake up…</span> the Matrix has you.
-<span class="dim">click the rain · type </span><span class="hi">help</span><span class="dim"> to look around</span>`);
   const hist = []; let hi = 0;
-  inp.addEventListener('keydown', e => {
+  inp.addEventListener('keydown', async e => {
     if (e.key === 'Enter') {
+      if (busy) return;
       const raw = inp.value.trim(); inp.value = '';
       if (!raw) return;
       hist.push(raw); hi = hist.length;
       print(`<span class="dim">anthony@matrix:~$</span> ${esc(raw)}`);
       const [cmd, ...args] = raw.split(/\s+/);
       const f = CMDS[cmd.toLowerCase()];
-      const r = f ? f(args) : `command not found: ${esc(cmd)} — try <span class="hi">help</span>`;
-      if (r) print(r);
+      busy = true;
+      try { const r = f ? await f(args) : `command not found: ${esc(cmd)} — try <span class="hi">help</span>`; if (r) print(r); }
+      finally { busy = false; }
     } else if (e.key === 'ArrowUp') { if (hi > 0) inp.value = hist[--hi]; e.preventDefault(); }
     else if (e.key === 'ArrowDown') { inp.value = hi < hist.length - 1 ? hist[++hi] : (hi = hist.length, ''); }
   });
   document.getElementById('min').onclick = () => term.classList.toggle('small');
-  if (matchMedia('(pointer:fine)').matches) inp.focus();
   term.addEventListener('pointerdown', e => { if (e.target.tagName !== 'A' && e.target.id !== 'min') setTimeout(() => inp.focus(), 0); });
 })();
 </script>
