@@ -83,7 +83,7 @@
     }))});
   }
   // A hint is a bright vertical word riding down a column.
-  function dropHint(col, text) { hints.push({col, row: -text.length, text, v: 0.3 * speed}); }
+  function dropHint(col, text, v = 0.3) { hints.push({col, row: -text.length, text, v: v * speed}); }
 
   const now = () => performance.now() / 1000;
   // The key: one red glyph trail that falls now and then. Click it to wake up.
@@ -229,10 +229,26 @@
   const esc = s => s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
   const print = (html, cls) => { const d = document.createElement('div'); if (cls) d.className = cls; d.innerHTML = html; out.appendChild(d); out.scrollTop = out.scrollHeight; return d; };
   const sleep = ms => new Promise(r => setTimeout(r, ms));
-  let busy = false;
+  let busy = false, skip = false;
+  const wait = ms => skip ? Promise.resolve() : sleep(ms);
   async function type(text, cls, ms = 45) {
     const d = print('', cls);
-    for (const ch of text) { d.textContent += ch; out.scrollTop = out.scrollHeight; await sleep(ms); }
+    for (const ch of text) { d.textContent += ch; out.scrollTop = out.scrollHeight; if (!skip) await sleep(ms); }
+  }
+  // A line of dialogue: speaker in dim caps, the line typed out in bright text.
+  async function talk(who, line, cls = 'hi') {
+    const d = print(`<span class="dim">${who}:</span> <span class="${cls}"></span>`);
+    const t = d.lastChild;
+    for (const ch of line) { t.textContent += ch; out.scrollTop = out.scrollHeight; if (!skip) await sleep(28); }
+    await wait(350);
+  }
+  // Scene direction: dim, quick.
+  const narrate = async text => { await type(text, 'dim', 18); await wait(250); };
+  // A construct-style loading bar.
+  async function load(label) {
+    const d = print(`<span class="dim">${label}</span> `);
+    const bar = document.createElement('span'); d.appendChild(bar);
+    for (let i = 1; i <= 16; i++) { bar.textContent = '[' + '█'.repeat(i) + ' '.repeat(16 - i) + '] ' + Math.round(i / 16 * 100) + '%'; if (!skip) await sleep(22); }
   }
 
   async function wake(gx, gy) {
@@ -251,50 +267,114 @@
     if (matchMedia('(pointer:fine)').matches) inp.focus();
   }
 
+  const COLORS = {green:'#39ff7a', red:'#ff4b4b', cyan:'#38e8ff', amber:'#ffb000', white:'#e8ffe8'};
+  const setColor = n => { color = COLORS[n]; document.documentElement.style.setProperty('--g', color); };
+
   const CMDS = {
-    help: () => `available commands:
-  <span class="hi">whoami</span>     who is this guy
-  <span class="hi">now</span>        what I'm working on
-  <span class="hi">career</span>     the non-linear speedrun
-  <span class="hi">skills</span>     tools I reach for
-  <span class="hi">certs</span>      certifications
-  <span class="hi">contact</span>    find me
-  <span class="hi">rain</span> &lt;word&gt;  make the Matrix spell something
-  <span class="hi">color</span> &lt;green|red|cyan|amber|white&gt;
-  <span class="hi">speed</span> &lt;0.2–4&gt;   rain speed (default 1)
-  <span class="hi">clear</span>      clear the screen
-  <span class="hi">exit</span>       back to GitHub
-<span class="dim">(there may be a few hidden ones)</span>`,
-    whoami: () => `<span class="hi">Anthony Hable</span> — AI Solutions Architect · Software Engineer
-AWS solutions architect building agentic AI systems and cloud
-infrastructure for locked-down federal environments.
-Hampton Roads, VA · coding since 2015 · U.S. Navy veteran`,
-    now: () => `▸ designing agentic AI for software dev intelligence & autonomous agile PM
-▸ architecting AWS infrastructure for restricted environments
-▸ applying AI-assisted engineering to ship faster`,
-    career: () => `2004  Navy ......................... peaked early?
-2011  Veterans Health Admin ........ discovered SharePoint
-2013  AECOM ........................ roads, drains, fire sprinklers
-2015  L3 / TECOMSYS ................ satellites & antennas
-2018  Boeing ....................... automated everyone's job
-2020  Northrop Grumman ............. first "Software Engineer" title
-2023  Velocity Consulting .......... AI-generated voiceovers
-2024  HII .......................... air-gapped on purpose
-2025  CACI ......................... GovCloud IL5
-2026  Norfolk Naval Shipyard ....... <span class="hi">found the groove ◀</span>`,
-    skills: () => `cloud     AWS · Lambda · Step Functions · Glue · S3 · IAM · KMS · GovCloud
-code      Python · SQL/PostgreSQL · Bash · MATLAB · LabVIEW
-delivery  IaC · Azure DevOps · Power Automate · Agile/Scrum
-now       agentic AI · AI-assisted engineering`,
-    certs: () => `✔ AWS Certified Solutions Architect – Associate   (2026)
-✔ AWS Certified Data Engineer – Associate          (2026)
-✔ AWS Certified Cloud Practitioner                 (2026)
-✔ CompTIA Security+                                (2026)
-✔ Certified ScrumMaster                            (2022)`,
-    contact: async () => {
-      await type('☎  incoming transmission…', 'dim', 35); await sleep(500);
-      await type('the operator is patching you through from the Nebuchadnezzar.', 'dim', 25); await sleep(500);
-      await type('"I can only show you the door. You\'re the one that has to walk through it."', 'hi', 30); await sleep(400);
+    help: async () => {
+      await narrate('☎  ring… ring…');
+      await talk('TANK', 'Operator. So what do you need? Besides a miracle.');
+      print(`<span class="dim">programs on the construct:</span>
+  <span class="hi">who are you</span>     who is Anthony?
+  <span class="hi">where are you</span>   where is Anthony?
+  <span class="hi">career</span>          the path he walked
+  <span class="hi">skills</span>          load the training programs
+  <span class="hi">certs</span>           the sparring program
+  <span class="hi">find me</span>         get patched through
+  <span class="hi">speed</span> &lt;0.2–4&gt;     bend time
+  <span class="hi">exit</span>            get out`);
+      await wait(300);
+      await talk('TANK', "Some programs aren't on the list. You'll have to find those yourself.");
+      await talk('MORPHEUS', "Or just talk to me. I'm listening.");
+      return null;
+    },
+
+    whoareyou: async () => {
+      await narrate("the Oracle's kitchen. something smells like cookies.");
+      await talk('ORACLE', 'See that sign above the door? "Temet nosce." Know thyself.');
+      await talk('ORACLE', "I'll save you the trouble.");
+      print(`
+  <span class="hi">Anthony Hable</span> — AI Solutions Architect · Software Engineer
+  AWS solutions architect building agentic AI systems and cloud
+  infrastructure for locked-down federal environments.
+  Hampton Roads, VA · coding since 2015 · U.S. Navy veteran
+`);
+      await talk('ORACLE', "Here, take a cookie. You'll feel right as rain.");
+      return null;
+    },
+
+    whereareyou: async () => {
+      await narrate('the Nebuchadnezzar. Tank runs a trace on the signal.');
+      await talk('TANK', 'Got him. Hampton Roads, Virginia. Norfolk Naval Shipyard.');
+      await talk('MORPHEUS', "And what he's fighting for:");
+      print(`
+  ▸ designing agentic AI for software dev intelligence & autonomous agile PM
+  ▸ architecting AWS infrastructure for restricted environments
+  ▸ applying AI-assisted engineering to ship faster
+`);
+      await talk('MORPHEUS', 'The mission is real. The machines are just tools.');
+      return null;
+    },
+
+    career: async () => {
+      await talk('MORPHEUS', "There's a difference between knowing the path and walking the path.");
+      await narrate('he walked a lot of them.');
+      const steps = [
+        ['2004', 'Navy', 'peaked early?'],
+        ['2011', 'Veterans Health Admin', 'discovered SharePoint'],
+        ['2013', 'AECOM', 'roads, drains, fire sprinklers'],
+        ['2015', 'L3 / TECOMSYS', 'satellites & antennas'],
+        ['2018', 'Boeing', "automated everyone's job"],
+        ['2020', 'Northrop Grumman', 'first "Software Engineer" title'],
+        ['2023', 'Velocity Consulting', 'AI-generated voiceovers'],
+        ['2024', 'HII', 'air-gapped on purpose'],
+        ['2025', 'CACI', 'GovCloud IL5'],
+      ];
+      for (const [y, org, note] of steps) { print(`${y}  ${(org + ' ').padEnd(29, '.')} ${esc(note)}`); await wait(140); }
+      print(`2026  ${'Norfolk Naval Shipyard '.padEnd(29, '.')} <span class="hi">found the groove ◀</span>`);
+      await wait(400);
+      await talk('MORPHEUS', 'He is beginning to believe.');
+      return null;
+    },
+
+    skills: async () => {
+      await narrate('the construct. Tank pulls up the training disks.');
+      await talk('TANK', "Okay. Let's load some programs.");
+      const progs = [
+        ['cloud.prg   ', 'AWS · Lambda · Step Functions · Glue · S3 · IAM · KMS · GovCloud'],
+        ['code.prg    ', 'Python · SQL/PostgreSQL · Bash · MATLAB · LabVIEW'],
+        ['delivery.prg', 'IaC · Azure DevOps · Power Automate · Agile/Scrum'],
+        ['future.prg  ', 'agentic AI · AI-assisted engineering'],
+      ];
+      for (const [f, list] of progs) { await load(`loading ${f}`); print(`  <span class="dim">↳</span> ${list}`); await wait(150); }
+      await wait(400);
+      await talk('ANTHONY', 'I know AWS.');
+      await talk('MORPHEUS', 'Show me.');
+      print(`<span class="dim">(type </span><span class="hi">certs</span><span class="dim">)</span>`);
+      return null;
+    },
+
+    certs: async () => {
+      await narrate('the sparring program loads. Morpheus takes his stance.');
+      await talk('MORPHEUS', 'Show me.');
+      const list = [
+        'AWS Certified Solutions Architect – Associate   (2026)',
+        'AWS Certified Data Engineer – Associate          (2026)',
+        'AWS Certified Cloud Practitioner                 (2026)',
+        'CompTIA Security+                                (2026)',
+        'Certified ScrumMaster                            (2022)',
+      ];
+      for (const c of list) { print(`  <span class="hi">✔</span> ${c}`); await wait(260); }
+      spawnWord(W / 2, H * 0.22, 'CERTIFIED');
+      await wait(300);
+      await talk('MOUSE', "Look at his neural-kinetics. They're way above normal.");
+      return null;
+    },
+
+    findme: async () => {
+      await type('☎  incoming transmission…', 'dim', 35); await wait(500);
+      await type('the operator is patching you through from the Nebuchadnezzar.', 'dim', 25); await wait(500);
+      await type('"I can only show you the door. You\'re the one that has to walk through it."', 'hi', 30); await wait(400);
       print(`
   the door  →  <a href="https://www.linkedin.com/in/ashable/" target="_blank" rel="noopener">linkedin.com/in/ashable</a>
   the code  →  <a href="https://github.com/sun-of-anton" target="_blank" rel="noopener">github.com/sun-of-anton</a>
@@ -303,37 +383,151 @@ now       agentic AI · AI-assisted engineering`,
       spawnWord(W / 2, H * 0.22, 'COME FIND ME');
       return null;
     },
-    contacts: a => CMDS.contact(a),
-    rain: a => { const w = (a.join(' ') || rnd(WORDS)).slice(0, 24); spawnWord(W / 2, H * (0.18 + Math.random() * .2), w); return `<span class="dim">raining "${esc(w.toUpperCase())}"…</span>`; },
-    color: a => { const m = {green:'#39ff7a', red:'#ff4b4b', cyan:'#38e8ff', amber:'#ffb000', white:'#e8ffe8'}; if (!m[a[0]]) return 'usage: color green|red|cyan|amber|white'; color = m[a[0]]; document.documentElement.style.setProperty('--g', color); return `<span class="dim">color → ${a[0]}</span>`; },
-    speed: a => { const v = parseFloat(a[0]); if (!(v >= .2 && v <= 4)) return 'usage: speed 0.2–4'; speed = v; return `<span class="dim">speed → ${v}</span>`; },
-    clear: () => { out.innerHTML = ''; return null; },
-    exit: () => { setTimeout(() => location.href = 'https://github.com/sun-of-anton', 500); return 'unplugging…'; },
+    // old names still work, just not advertised
+    whoami: () => CMDS.whoareyou(), now: () => CMDS.whereareyou(),
+    contact: () => CMDS.findme(), contacts: () => CMDS.findme(),
+    whoisanthony: () => CMDS.whoareyou(), whoishe: () => CMDS.whoareyou(),
+    whereishe: () => CMDS.whereareyou(), whereisanthony: () => CMDS.whereareyou(),
+
+
+    speed: async a => {
+      const v = parseFloat(a[0]);
+      if (!(v >= .2 && v <= 4)) { await talk('MORPHEUS', 'Time bends between 0.2 and 4. No further.'); return null; }
+      speed = v;
+      if (v < 1) await talk('MORPHEUS', "Time slows. You're starting to see it. Bullets, everything.");
+      else if (v > 1) await talk('MORPHEUS', "You think that's air you're breathing now?");
+      else await narrate('time returns to normal.');
+      return null;
+    },
+
+    exit: async () => {
+      await talk('TANK', "Hold on. I'm getting you out.");
+      await narrate('☎  ring… ring…  you pick up the phone.');
+      await wait(400);
+      location.href = 'https://github.com/sun-of-anton';
+      return null;
+    },
+
     // hidden
-    redpill: () => { CMDS.color(['red']); spawnWord(W/2, H*.22, "WAKE UP, NEO"); return `<span class="red">you stay in Wonderland. let's see how deep the rabbit hole goes.</span>`; },
-    bluepill: () => { setTimeout(() => location.href = 'https://github.com/sun-of-anton', 1500); return 'the story ends. you wake up in your bed (on GitHub)…'; },
-    spoon: () => { spawnWord(W/2, H*.22, "THERE IS NO SPOON"); return 'there is no spoon.'; },
-    sudo: () => `<span class="red">nice try.</span> this incident will be reported.`,
-    ls: () => `about.txt  career.log  certs/  secrets/  <span class="dim">(try cat)</span>`,
-    cat: a => a[0] === 'secrets/' || a[0] === 'secrets' ? 'permission denied: IL5 says no.' : (CMDS[{'about.txt':'whoami','career.log':'career','certs/':'certs'}[a[0]]] || (() => `cat: ${esc(a[0]||'')}: no such file`))(),
-    hello: () => 'Hello, World! 👋',
-    follow: a => a.join(' ').includes('white rabbit') ? (spawnWord(W/2,H*.22,"KNOCK KNOCK"), '🐇 knock, knock.') : 'follow what?',
-    coffee: () => 'brewing… ☕ (agentic AI cannot do this yet)'
+    redpill: async () => {
+      await talk('MORPHEUS', 'You take the red pill, you stay in Wonderland,', 'red');
+      setColor('red'); spawnWord(W / 2, H * .22, 'WAKE UP, NEO');
+      await talk('MORPHEUS', 'and I show you how deep the rabbit hole goes.', 'red');
+      return null;
+    },
+    bluepill: async () => {
+      await talk('MORPHEUS', 'You take the blue pill, the story ends.');
+      await talk('MORPHEUS', 'You wake up in your bed and believe whatever you want to believe.');
+      await wait(700);
+      location.href = 'https://github.com/sun-of-anton';
+      return null;
+    },
+    spoon: async () => {
+      await talk('SPOON BOY', "Do not try and bend the spoon. That's impossible.");
+      await talk('SPOON BOY', 'Instead, only try to realize the truth.');
+      spawnWord(W / 2, H * .22, 'THERE IS NO SPOON');
+      await talk('SPOON BOY', 'There is no spoon.');
+      return null;
+    },
+    sudo: async () => { await talk('AGENT SMITH', 'Mr. Anderson… you have no authority here.', 'red'); return null; },
+    ls: async () => {
+      await narrate("Tank opens the ship's files.");
+      return `about.txt  career.log  certs/  secrets/  <span class="dim">(try cat)</span>`;
+    },
+    cat: async a => {
+      const f = a[0] || '';
+      if (f === 'secrets/' || f === 'secrets') {
+        await talk('CYPHER', 'Ignorance is bliss.');
+        return '<span class="red">permission denied: IL5 says no.</span>';
+      }
+      const m = {'about.txt': 'whoareyou', 'career.log': 'career', 'certs/': 'certs', 'certs': 'certs'}[f];
+      if (m) return CMDS[m]();
+      await talk('TANK', `Nothing on the ship called "${esc(f)}".`);
+      return null;
+    },
+    hello: async () => { await talk('AGENT SMITH', 'Hello… Mr. Anderson.', 'red'); await narrate('(Hello, World! 👋)'); return null; },
+    follow: async a => {
+      if (!a.join(' ').includes('white rabbit')) { await talk('TRINITY', 'Follow what?'); return null; }
+      spawnWord(W / 2, H * .22, 'KNOCK KNOCK');
+      await narrate('🐇 someone knocks on your door.');
+      await talk('TRINITY', "He's been looking for you. Follow the white rabbit.");
+      return null;
+    },
+    coffee: async () => {
+      await talk('ORACLE', "No coffee. But the cookies'll be done in a minute.");
+      await narrate('(agentic AI cannot brew coffee yet either.)');
+      return null;
+    }
   };
+
+
+  // ---- Morpheus listens: anything that isn't a command gets an answer ----
+  const INTENTS = [
+    {re: /\b(hir(e|ing)|job|role|position|recruit|opportunit|interview|resume|cv|freelance|contract|available|work with|team)\b/,
+     run: async () => { await talk('MORPHEUS', "You're not here by accident. You're looking for him."); await talk('MORPHEUS', "I'll patch you through."); return CMDS.findme(); }},
+    {re: /\b(aws|cloud|lambda|python|sql|postgres|stack|tech|skills?|code|coding|program(ming)?|language|devops|terraform|iac)\b/,
+     run: async () => { await talk('MORPHEUS', "You want to know what he can do. Tank, load the programs."); return CMDS.skills(); }},
+    {re: /\b(certs?|certified|certifications?|security\+?|comptia|scrum)\b/, run: async () => { await talk('MORPHEUS', "Words are easy. Let him show you."); return CMDS.certs(); }},
+    {re: /\b(career|experience|history|background|resume|navy|boeing|northrop|caci|hii|journey|path)\b/,
+     run: async () => CMDS.career()},
+    {re: /\b(where|located|location|based|his work|what does he do|agentic|agents?|ai|llm|claude|gpt|machine learning|working on|currently|right now|project|mission|building)\b/,
+     run: async () => { await talk('MORPHEUS', "The machines are coming. He's teaching them to work for us."); return CMDS.whereareyou(); }},
+    {re: /\b(who (is|are)|about|anthony|yourself|bio|tell me)\b/, run: async () => { await talk('MORPHEUS', "You want to know who he is. Only the Oracle can tell you that."); return CMDS.whoareyou(); }},
+    {re: /\b(real|matrix|dream|simulation)\b/, run: async () => { await talk('MORPHEUS', 'What is real? How do you define "real"?'); await talk('MORPHEUS', "If you're talking about what you can feel, what you can smell, taste and see… then real is simply electrical signals interpreted by your brain."); return null; }},
+    {re: /\b(neo|the one|chosen)\b/, run: async () => { await talk('MORPHEUS', "I've been looking for the One a long time."); await talk('MORPHEUS', "Maybe it's you. Maybe it's him. Ask him: who are you?"); return null; }},
+    {re: /\b(pill|choice|choose)\b/, run: async () => { await talk('MORPHEUS', "This is your last chance. After this, there is no turning back."); print('<span class="red">redpill</span>  ·  <span style="color:#5aa0ff">bluepill</span>'); return null; }},
+    {re: /\b(thanks?|thank you|thx|cool|awesome|nice|dope|sick|love (it|this))\b/, run: async () => { await talk('MORPHEUS', "Don't thank me. Walk through the door."); print('<span class="dim">(type </span><span class="hi">find me</span><span class="dim">)</span>'); return null; }},
+    {re: /\b(hi|hello|hey|yo|sup|greetings|morpheus)\b/, run: async () => { await talk('MORPHEUS', "At last. I've been waiting for you."); await talk('MORPHEUS', 'Ask me anything. Or type help.'); return null; }},
+    {re: /\b(help|how|what can|commands?|lost|stuck|confused)\b/, run: async () => CMDS.help()},
+    {re: /\b(bye|goodbye|quit|logout|log off)\b/, run: async () => CMDS.exit()},
+  ];
+  const FALLBACK = [
+    ["I can't answer that. But I can show you the door.", 'find me'],
+    ["You're thinking about it too hard. Free your mind.", 'help'],
+    ["Not everything is a program. Some things you have to ask him yourself.", 'find me'],
+    ["I don't know that one. But he might. Ask him yourself.", 'find me'],
+  ];
+  async function listen(raw) {
+    const t = raw.toLowerCase();
+    const hit = INTENTS.find(i => i.re.test(t));
+    if (hit) return hit.run();
+    const [line, next] = rnd(FALLBACK);
+    await talk('MORPHEUS', line);
+    return `<span class="dim">(try </span><span class="hi">${next}</span><span class="dim">)</span>`;
+  }
+
+  // ---- the rain listens too: each keystroke falls, each finished word lands ----
+  let typedWord = '', slot = 0;
+  // typed words take turns on six rows in the upper screen so they don't stack on each other
+  const landTyped = w => spawnWord(W * (0.15 + Math.random() * 0.7), H * (0.1 + (slot++ % 6) * 0.065), w.slice(0, 18));
+  inp.addEventListener('input', e => {
+    const ch = e.data;
+    if (!ch) return;
+    if (/\s/.test(ch)) {
+      if (typedWord.length >= 2 && words.length < 5) landTyped(typedWord);
+      typedWord = '';
+    } else {
+      typedWord += ch;
+      dropHint(Math.floor(Math.random() * cols), ch.toUpperCase(), 0.9);
+    }
+  });
 
   const hist = []; let hi = 0;
   inp.addEventListener('keydown', async e => {
     if (e.key === 'Enter') {
-      if (busy) return;
+      if (busy) { skip = true; return; }   // Enter mid-scene skips to the end
       const raw = inp.value.trim(); inp.value = '';
       if (!raw) return;
       hist.push(raw); hi = hist.length;
       print(`<span class="dim">anthony@matrix:~$</span> ${esc(raw)}`);
       const [cmd, ...args] = raw.split(/\s+/);
-      const f = CMDS[cmd.toLowerCase()];
-      busy = true;
-      try { const r = f ? await f(args) : `command not found: ${esc(cmd)} — try <span class="hi">help</span>`; if (r) print(r); }
-      finally { busy = false; }
+      const phrase = raw.toLowerCase().replace(/[^a-z]/g, '');
+      const f = CMDS[cmd.toLowerCase()] || (CMDS[phrase] ? () => CMDS[phrase]([]) : null);   // 'speed 2' keeps its number; 'who are you?' still matches
+      busy = true; skip = false;
+      if (typedWord.length >= 2 && words.length < 5) landTyped(typedWord);
+      typedWord = '';
+      try { const r = f ? await f(args) : await listen(raw); if (r) print(r); }
+      finally { busy = false; skip = false; }
     } else if (e.key === 'ArrowUp') { if (hi > 0) inp.value = hist[--hi]; e.preventDefault(); }
     else if (e.key === 'ArrowDown') { inp.value = hi < hist.length - 1 ? hist[++hi] : (hi = hist.length, ''); }
   });
