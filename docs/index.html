@@ -48,7 +48,10 @@
 
   // ---------- crisp rain: device-pixel canvas, per-cell glyphs, explicit trails ----------
   function size() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // sharp on retina, but keep the canvas under ~6 megapixels so huge high-density screens don't choke
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Math.min(dpr, Math.sqrt(6e6 / (innerWidth * innerHeight)));
+    dpr = Math.max(1, dpr);
     W = innerWidth; H = innerHeight;
     c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
     c.style.width = W + 'px'; c.style.height = H + 'px';
@@ -222,7 +225,12 @@
     x.font = `500 ${CELL - 7}px "M PLUS 1 Code", "Courier New", monospace`;
   }
 
+  let lastDraw = 0;
   function frame() {
+    // 60fps is plenty for falling rain; on 120/144/240Hz monitors skip the extra refreshes instead of redrawing them
+    const nowMs = performance.now();
+    if (nowMs - lastDraw < 1000 / 62) { requestAnimationFrame(frame); return; }
+    lastDraw = nowMs;
     x.fillStyle = '#000'; x.fillRect(0, 0, W, H);
     x.textBaseline = 'top'; x.textAlign = 'center';
     x.font = `500 ${CELL - 7}px "M PLUS 1 Code", "Courier New", monospace`;
