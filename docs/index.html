@@ -42,7 +42,7 @@
   const c = document.getElementById('c'), x = c.getContext('2d');
   const hintEl = document.getElementById('hint');
   let W, H, CELL, cols, rows, columns = [], speed = 1, color = '#39ff7a', words = [], hints = [];
-  let found = false, t0 = performance.now(), glitch = {c: 0, r: 0}, lastHint = 0, pulses = [];
+  let found = false, lastHint = 0, pulses = [], clicks = 0, red = null, nextRed = performance.now() / 1000 + 4;
 
   // ---------- crisp rain: device-pixel canvas, per-cell glyphs, explicit trails ----------
   function size() {
@@ -51,10 +51,9 @@
     c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
     c.style.width = W + 'px'; c.style.height = H + 'px';
     x.setTransform(dpr, 0, 0, dpr, 0, 0);
-    CELL = W < 600 ? 16 : 20;
+    CELL = W < 600 ? 19 : 24;
     cols = Math.ceil(W / CELL); rows = Math.ceil(H / CELL) + 1;
     columns = Array.from({length: cols}, () => newColumn(true));
-    placeGlitch();
   }
   function newColumn(scatter) {
     return {
@@ -64,14 +63,10 @@
       glyphs: Array.from({length: rows + 40}, () => rnd(GLY))
     };
   }
-  function placeGlitch() {
-    glitch.c = 3 + Math.floor(Math.random() * Math.max(1, cols - 6));
-    glitch.r = 3 + Math.floor(Math.random() * Math.max(1, rows * 0.55 - 3));
-  }
   addEventListener('resize', size); size();
 
   const WORDS = ["AWS","AGENTIC AI","PYTHON","GOVCLOUD","LAMBDA","SHIP IT","HELLO WORLD","ARCHITECT","AUTOMATE","POSTGRES","SECURITY+","FOUND THE GROOVE"];
-  const HINTS = ["FOLLOW THE WHITE RABBIT","LOOK CLOSER","A GLITCH IN THE MATRIX","DEJA VU","KNOCK KNOCK","SOMETHING IS WRONG","FIND THE GLITCH"];
+  const HINTS = ["FOLLOW THE WHITE RABBIT","LOOK CLOSER","FOLLOW THE RED","DEJA VU","KNOCK KNOCK","SOMETHING IS WRONG","CATCH THE RED ONE"];
 
   // Clicked words: letters drop out of the rain into place, hold, then fall out the bottom.
   function spawnWord(px, py, text) {
@@ -86,15 +81,17 @@
   // A hint is a bright vertical word riding down a column.
   function dropHint(col, text) { hints.push({col, row: -text.length, text, v: 0.16 * speed}); }
 
-  const elapsed = () => (performance.now() - t0) / 1000;
+  const now = () => performance.now() / 1000;
+  // The key: one red glyph trail that falls now and then. Click it to wake up.
+  const redXY = () => ({x: red.col * CELL + CELL / 2, y: red.head * CELL + CELL / 2});
   const say = s => { hintEl.innerHTML = s; hintEl.style.opacity = s ? .85 : 0; };
 
   function frame() {
     x.fillStyle = '#000'; x.fillRect(0, 0, W, H);
     x.textBaseline = 'top'; x.textAlign = 'center';
-    x.font = `${CELL - 2}px "Courier New", monospace`;
-    const T = elapsed();
-    const warm = !found && T > 30;   // after 30s the rain reacts to the glitch
+    x.font = `${CELL - 3}px "Courier New", monospace`;
+    const T = now();
+    const hinting = clicks >= 5;
 
     // rain
     for (let i = 0; i < cols; i++) {
@@ -107,7 +104,6 @@
         if (Math.random() < 0.004) col.glyphs[r] = rnd(GLY);         // occasional flicker, not constant churn
         const a = Math.pow(1 - k / col.len, 1.6);
         let fill = k === 0 ? '#eaffef' : color;
-        if (warm && i === glitch.c && Math.abs(r - glitch.r) < 2) fill = '#ff4b4b';
         x.globalAlpha = k === 0 ? 1 : Math.max(.06, a);
         x.fillStyle = fill;
         x.fillText(col.glyphs[r], i * CELL + CELL / 2, r * CELL);
@@ -127,16 +123,27 @@
       });
     }
 
-    // the glitch
+    // the red one
     if (!found) {
-      const gx = glitch.c * CELL + CELL / 2, gy = glitch.r * CELL + CELL / 2;
-      const period = T > 30 ? 0.9 : 1.8;
-      const on = (T % period) < 0.12 || (T > 45 && (T % period) < 0.3);
-      x.fillStyle = '#000'; x.fillRect(glitch.c * CELL, glitch.r * CELL, CELL, CELL);
-      x.fillStyle = on ? (Math.random() < .5 ? '#ffffff' : '#ff4b4b') : '#1a3a22';
-      const s = on ? 6 : 3;
-      x.fillRect(gx - s / 2, gy - s / 2, s, s);
-      if (T > 45 && (T % 3) < 0.02) pulses.push({x: gx, y: gy, r: 4});
+      if (!red && T > nextRed) {
+        red = {col: 2 + Math.floor(Math.random() * Math.max(1, cols - 4)), head: -2, v: 0.11 + Math.random() * 0.06, len: 12,
+               glyphs: Array.from({length: rows + 20}, () => rnd(GLY))};
+      }
+      if (red) {
+        red.head += red.v * speed;
+        const h = Math.floor(red.head);
+        for (let k = 0; k <= red.len; k++) {
+          const r = h - k; if (r < 0 || r >= rows) continue;
+          x.fillStyle = '#000'; x.fillRect(red.col * CELL, r * CELL, CELL, CELL);
+          x.globalAlpha = k === 0 ? 1 : Math.max(.2, Math.pow(1 - k / red.len, 1.1));
+          x.fillStyle = k === 0 ? '#ff6a6a' : '#ff2a2a';
+          if (k === 0) { x.shadowColor = '#ff3b3b'; x.shadowBlur = 10; }
+          x.fillText(red.glyphs[r], red.col * CELL + CELL / 2, r * CELL);
+          x.shadowBlur = 0;
+        }
+        x.globalAlpha = 1;
+        if (h - red.len > rows) { red = null; nextRed = T + (hinting ? 3 + Math.random() * 3 : 8 + Math.random() * 6); }
+      }
     }
     pulses = pulses.filter(p => (p.r += 1.6) < 90);
     for (const p of pulses) { x.strokeStyle = color; x.globalAlpha = 1 - p.r / 90; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 7); x.stroke(); }
@@ -169,33 +176,32 @@
       }
     }
     x.globalAlpha = 1;
-    x.font = `${CELL - 2}px "Courier New", monospace`;
+    x.font = `${CELL - 3}px "Courier New", monospace`;
 
-    // hint schedule (only while hunting)
-    if (!found && T - lastHint > 6) {
-      lastHint = T;
-      const nearGlitch = T > 15;
-      dropHint(nearGlitch ? glitch.c : Math.floor(Math.random() * cols), rnd(HINTS));
-    }
-    if (!found) {
-      if (T > 60) say('psst… stuck? press <b>~</b>');
-      else if (T > 45) say('it\'s pulsing. click it.');
-      else if (T > 30) say('watch where the rain turns red.');
-      else if (T > 2) say('something in here isn\'t like the rest.');
+    // hints only after 5 clicks
+    if (!found && hinting) {
+      if (T - lastHint > 6) {
+        lastHint = T;
+        dropHint(red && Math.random() < .5 ? Math.min(cols - 1, red.col + (Math.random() < .5 ? -2 : 2)) : Math.floor(Math.random() * cols), rnd(HINTS));
+      }
+      if (clicks >= 15) say('psst… stuck? press <b>~</b>');
+      else if (clicks >= 10) say('catch the <span style="color:#ff3b3b">red</span> one.');
+      else say('something in here isn\'t like the rest.');
     }
     requestAnimationFrame(frame);
   }
   frame();
 
   c.addEventListener('pointerdown', e => {
-    if (!found) {
-      const gx = glitch.c * CELL + CELL / 2, gy = glitch.r * CELL + CELL / 2;
-      const hit = Math.hypot(e.clientX - gx, e.clientY - gy) < (e.pointerType === 'touch' ? 40 : 26);
-      if (hit) return wake();
+    if (!found && red) {
+      const p = redXY(), reach = e.pointerType === 'touch' ? 42 : 30;
+      // forgiving: the head or the few cells just above it
+      if (Math.abs(e.clientX - p.x) < reach && e.clientY > p.y - CELL * 3 - reach && e.clientY < p.y + reach) return wake(p.x, p.y);
     }
+    if (!found) { clicks++; if (clicks === 5) lastHint = 0; }
     spawnWord(e.clientX, e.clientY);
   });
-  addEventListener('keydown', e => { if (!found && (e.key === '~' || e.key === '`')) { e.preventDefault(); wake(); } });
+  addEventListener('keydown', e => { if (!found && (e.key === '~' || e.key === '`')) { e.preventDefault(); wake(W / 2, H / 3); } });
 
   // ---------------- terminal ----------------
   const out = document.getElementById('out'), inp = document.getElementById('in'), term = document.getElementById('term');
@@ -208,10 +214,9 @@
     for (const ch of text) { d.textContent += ch; out.scrollTop = out.scrollHeight; await sleep(ms); }
   }
 
-  async function wake() {
+  async function wake(gx, gy) {
     if (found) return; found = true; busy = true;
-    say(''); hints = []; pulses = [];
-    const gx = glitch.c * CELL + CELL / 2, gy = glitch.r * CELL + CELL / 2;
+    say(''); hints = []; pulses = []; red = null;
     for (let i = 0; i < 4; i++) setTimeout(() => pulses.push({x: gx, y: gy, r: 4}), i * 180);
     spawnWord(W / 2, H * 0.22, 'WAKE UP');
     term.classList.add('open'); term.setAttribute('aria-hidden', 'false');
@@ -220,7 +225,7 @@
     await type('The Matrix has you…', 'hi', 70); await sleep(900);
     await type('Follow the white rabbit.', 'hi', 60); await sleep(700);
     await type('Knock, knock.', 'hi', 80); await sleep(500);
-    print(`<span class="dim">you found the glitch. type </span><span class="hi">help</span><span class="dim"> to look around.</span>`);
+    print(`<span class="dim">you caught the red one. type </span><span class="hi">help</span><span class="dim"> to look around.</span>`);
     busy = false;
     if (matchMedia('(pointer:fine)').matches) inp.focus();
   }
