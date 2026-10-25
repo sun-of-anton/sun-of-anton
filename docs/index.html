@@ -131,11 +131,11 @@
     // the red one
     if (!found) {
       if (!red && T > nextRed) {
-        red = {col: 2 + Math.floor(Math.random() * Math.max(1, cols - 4)), head: -2, v: 0.062 + Math.random() * 0.012, len: 10,
+        red = {col: 2 + Math.floor(Math.random() * Math.max(1, cols - 4)), head: -2, born: T, len: 10,
                glyphs: Array.from({length: rows + 20}, () => rnd(GLY))};
       }
       if (red) {
-        red.head += red.v * speed;
+        red.head = -2 + (T - red.born) / 6.5 * (rows + red.len + 3);   // always 6.5s top to bottom
         const h = Math.floor(red.head);
         for (let k = 0; k <= red.len; k++) {
           const r = h - k; if (r < 0 || r >= rows) continue;

@@ -4,10 +4,10 @@
      ============================================================ -->
 
 <!-- Matrix rain intro (assets/matrix-intro.svg) loops through scenes; clicking opens the interactive version (docs/index.html on GitHub Pages) -->
-<a href="https://sun-of-anton.github.io/sun-of-anton/?v=10"><img src="./assets/matrix-intro.svg" width="100%" alt="Hello World! I'm Anthony — AI Solutions Architect // Software Engineer. Click to enter the Matrix."/></a>
+<a href="https://sun-of-anton.github.io/sun-of-anton/?v=11"><img src="./assets/matrix-intro.svg" width="100%" alt="Hello World! I'm Anthony — AI Solutions Architect // Software Engineer. Click to enter the Matrix."/></a>
 
 <p align="center">
-  <a href="https://sun-of-anton.github.io/sun-of-anton/?v=10"><img src="https://img.shields.io/badge/💊_Red_pill-enter_the_Matrix-cc0000?style=for-the-badge" alt="Red pill: enter the interactive Matrix"/></a>
+  <a href="https://sun-of-anton.github.io/sun-of-anton/?v=11"><img src="https://img.shields.io/badge/💊_Red_pill-enter_the_Matrix-cc0000?style=for-the-badge" alt="Red pill: enter the interactive Matrix"/></a>
   <a href="#-right-now"><img src="https://img.shields.io/badge/💊_Blue_pill-stay_on_GitHub-0044cc?style=for-the-badge" alt="Blue pill: keep reading"/></a>
 </p>
 
