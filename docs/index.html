@@ -131,7 +131,7 @@
     // the red one
     if (!found) {
       if (!red && T > nextRed) {
-        red = {col: 2 + Math.floor(Math.random() * Math.max(1, cols - 4)), head: -2, v: 0.09 + Math.random() * 0.04, len: 10,
+        red = {col: 2 + Math.floor(Math.random() * Math.max(1, cols - 4)), head: -2, v: 0.04 + Math.random() * 0.012, len: 10,
                glyphs: Array.from({length: rows + 20}, () => rnd(GLY))};
       }
       if (red) {
@@ -214,7 +214,7 @@
 
   c.addEventListener('pointerdown', e => {
     if (!found && red) {
-      const p = redXY(), reach = e.pointerType === 'touch' ? 42 : 30;
+      const p = redXY(), reach = e.pointerType === 'touch' ? 48 : 38;
       // forgiving: the head or the few cells just above it
       if (Math.abs(e.clientX - p.x) < reach && e.clientY > p.y - CELL * 3 - reach && e.clientY < p.y + reach) return wake(p.x, p.y);
     }
