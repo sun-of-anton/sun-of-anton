@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Anthony Hable · The Matrix</title>
+<meta name="description" content="Anthony Hable — AI Solutions Architect & Software Engineer. Click the rain. Type 'help'.">
+<style>
+  :root{--g:#39ff7a;--g2:#00c832;--dim:#0d3b1c;--bg:#020a04}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);overflow:hidden;font-family:"Courier New",Courier,monospace;color:var(--g)}
+  canvas{position:fixed;inset:0;display:block;cursor:crosshair}
+  #hint{position:fixed;top:16px;left:50%;transform:translateX(-50%);font-size:13px;opacity:.75;letter-spacing:.08em;pointer-events:none;text-align:center;width:calc(100% - 32px);transition:opacity 1s}
+  #term{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);width:min(760px,calc(100% - 32px));max-height:52vh;display:flex;flex-direction:column;
+        background:rgba(2,12,5,.86);border:1px solid #145c2a;border-radius:10px;box-shadow:0 0 30px rgba(57,255,122,.12);backdrop-filter:blur(2px)}
+  #bar{display:flex;gap:6px;align-items:center;padding:8px 12px;border-bottom:1px solid #0f3d1c;font-size:12px;opacity:.8}
+  #bar i{width:10px;height:10px;border-radius:50%;display:inline-block}
+  #out{padding:10px 14px;overflow-y:auto;font-size:14px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+  #out a{color:#9cffb8}
+  .dim{color:#5c9e72}.hi{color:#fff;text-shadow:0 0 8px var(--g)}.red{color:#ff4b4b}
+  #line{display:flex;padding:0 14px 12px;font-size:14px}
+  #line span{white-space:pre}
+  #in{flex:1;background:transparent;border:0;outline:0;color:#fff;font:inherit;caret-color:var(--g)}
+  #min{margin-left:auto;cursor:pointer;background:none;border:1px solid #145c2a;color:var(--g);border-radius:4px;font:inherit;font-size:11px;padding:1px 6px}
+  #term.small #out,#term.small #line{display:none}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hint">click anywhere to disturb the rain · type <b>help</b> below</div>
+<div id="term">
+  <div id="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>&nbsp; anthony@matrix: ~ <button id="min" title="minimize">_</button></div>
+  <div id="out"></div>
+  <div id="line"><span>anthony@matrix:~$ </span><input id="in" autocomplete="off" spellcheck="false" aria-label="terminal input"></div>
+</div>
+<script>
+(() => {
+  const GLY = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワ0123456789$#@%&*+=<>";
+  const rnd = a => a[Math.floor(Math.random() * a.length)];
+  const c = document.getElementById('c'), x = c.getContext('2d');
+  let W, H, FS = 18, cols, drops, speed = 1, color = '#39ff7a', words = [], sparks = [];
+
+  function size() {
+    W = c.width = innerWidth; H = c.height = innerHeight;
+    FS = W < 600 ? 14 : 18;
+    cols = Math.ceil(W / FS);
+    drops = Array.from({length: cols}, () => Math.random() * -H / FS);
+  }
+  addEventListener('resize', size); size();
+
+  const WORDS = ["AWS","AGENTIC AI","PYTHON","GOVCLOUD","LAMBDA","IaC","SHIP IT","HELLO WORLD","ARCHITECT","AUTOMATE","STEP FUNCTIONS","POSTGRES","SECURITY+","SCRUM","NAVY","AEROSPACE","FOUND THE GROOVE"];
+
+  // A clicked word: each letter falls in its own column and lands at the click row.
+  function spawnWord(px, py, text) {
+    text = text || rnd(WORDS);
+    const startCol = Math.max(0, Math.min(cols - text.length, Math.round(px / FS - text.length / 2)));
+    const row = Math.round(py / FS);
+    words.push({
+      t: 0, life: 260,
+      letters: [...text].map((ch, i) => ({ch, col: startCol + i, y: row - 12 - Math.random() * 14, target: row, landed: false}))
+    });
+    for (let i = 0; i < 40; i++) {
+      const a = Math.random() * Math.PI * 2, v = 2 + Math.random() * 6;
+      sparks.push({x: px, y: py, vx: Math.cos(a) * v, vy: Math.sin(a) * v, ch: rnd(GLY), life: 40 + Math.random() * 30});
+    }
+    // ripple: reset nearby rain columns so they pour from the click
+    const cc = Math.round(px / FS);
+    for (let i = -6; i <= 6; i++) if (drops[cc + i] !== undefined) drops[cc + i] = row - Math.abs(i) * 2;
+  }
+
+  c.addEventListener('pointerdown', e => { spawnWord(e.clientX, e.clientY); hint.style.opacity = 0; });
+
+  function frame() {
+    x.fillStyle = 'rgba(2,10,4,0.08)';
+    x.fillRect(0, 0, W, H);
+    x.font = FS + 'px "Courier New", monospace';
+    for (let i = 0; i < cols; i++) {
+      const y = drops[i] * FS;
+      x.fillStyle = '#d8ffe0'; x.fillText(rnd(GLY), i * FS, y);
+      x.fillStyle = color; x.globalAlpha = .55; x.fillText(rnd(GLY), i * FS, y - FS); x.globalAlpha = 1;
+      if (y > H && Math.random() > 0.975) drops[i] = 0;
+      drops[i] += speed * (0.55 + (i * 7919 % 10) / 22);
+    }
+    // sparks
+    sparks = sparks.filter(s => s.life-- > 0);
+    for (const s of sparks) {
+      s.x += s.vx; s.y += s.vy; s.vy += .15; s.vx *= .97;
+      x.globalAlpha = Math.min(1, s.life / 30); x.fillStyle = color; x.fillText(s.ch, s.x, s.y); x.globalAlpha = 1;
+    }
+    // landing words
+    words = words.filter(w => w.t++ < w.life);
+    x.font = 'bold ' + Math.round(FS * 1.5) + 'px "Courier New", monospace';
+    for (const w of words) {
+      const fade = w.t > w.life - 60 ? (w.life - w.t) / 60 : 1;
+      for (const L of w.letters) {
+        if (!L.landed) { L.y += 0.9 + Math.random() * .6; if (L.y >= L.target) { L.y = L.target; L.landed = true; L.flash = 12; } }
+        const ch = L.landed ? L.ch : rnd(GLY);
+        x.globalAlpha = fade;
+        x.shadowColor = color; x.shadowBlur = L.landed ? 14 : 4;
+        x.fillStyle = L.flash > 0 ? '#ffffff' : (L.landed ? color : '#9cffb8');
+        if (L.flash > 0) L.flash--;
+        x.fillText(ch, L.col * FS, L.y * FS);
+        x.shadowBlur = 0; x.globalAlpha = 1;
+      }
+    }
+    x.font = FS + 'px "Courier New", monospace';
+    requestAnimationFrame(frame);
+  }
+  frame();
+  setTimeout(() => spawnWord(W / 2, H * 0.3, "HELLO WORLD"), 700);
+
+  // ---------------- terminal ----------------
+  const out = document.getElementById('out'), inp = document.getElementById('in'), term = document.getElementById('term'), hint = document.getElementById('hint');
+  const esc = s => s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+  const print = (html, cls) => { const d = document.createElement('div'); if (cls) d.className = cls; d.innerHTML = html; out.appendChild(d); out.scrollTop = out.scrollHeight; };
+
+  const CMDS = {
+    help: () => `available commands:
+  <span class="hi">whoami</span>     who is this guy
+  <span class="hi">now</span>        what I'm working on
+  <span class="hi">career</span>     the non-linear speedrun
+  <span class="hi">skills</span>     tools I reach for
+  <span class="hi">certs</span>      certifications
+  <span class="hi">contact</span>    find me
+  <span class="hi">rain</span> &lt;word&gt;  make the Matrix spell something
+  <span class="hi">color</span> &lt;green|red|cyan|amber|white&gt;
+  <span class="hi">speed</span> &lt;0.2–4&gt;   rain speed
+  <span class="hi">clear</span>      clear the screen
+  <span class="hi">exit</span>       back to GitHub
+<span class="dim">(there may be a few hidden ones)</span>`,
+    whoami: () => `<span class="hi">Anthony Hable</span> — AI Solutions Architect · Software Engineer
+AWS solutions architect building agentic AI systems and cloud
+infrastructure for locked-down federal environments.
+Hampton Roads, VA · coding since 2015 · U.S. Navy veteran`,
+    now: () => `▸ designing agentic AI for software dev intelligence & autonomous agile PM
+▸ architecting AWS infrastructure for restricted environments
+▸ applying AI-assisted engineering to ship faster`,
+    career: () => `2004  Navy ......................... peaked early?
+2011  Veterans Health Admin ........ discovered SharePoint
+2013  AECOM ........................ roads, drains, fire sprinklers
+2015  L3 / TECOMSYS ................ satellites & antennas
+2018  Boeing ....................... automated everyone's job
+2020  Northrop Grumman ............. first "Software Engineer" title
+2023  Velocity Consulting .......... AI-generated voiceovers
+2024  HII .......................... air-gapped on purpose
+2025  CACI ......................... GovCloud IL5
+2026  Norfolk Naval Shipyard ....... <span class="hi">found the groove ◀</span>`,
+    skills: () => `cloud     AWS · Lambda · Step Functions · Glue · S3 · IAM · KMS · GovCloud
+code      Python · SQL/PostgreSQL · Bash · MATLAB · LabVIEW
+delivery  IaC · Azure DevOps · Power Automate · Agile/Scrum
+now       agentic AI · AI-assisted engineering`,
+    certs: () => `✔ AWS Certified Solutions Architect – Associate   (2026)
+✔ AWS Certified Data Engineer – Associate          (2026)
+✔ AWS Certified Cloud Practitioner                 (2026)
+✔ CompTIA Security+                                (2026)
+✔ Certified ScrumMaster                            (2022)`,
+    contact: () => `linkedin  <a href="https://www.linkedin.com/in/ashable/" target="_blank" rel="noopener">linkedin.com/in/ashable</a>
+github    <a href="https://github.com/sun-of-anton" target="_blank" rel="noopener">github.com/sun-of-anton</a>`,
+    rain: a => { const w = (a.join(' ') || rnd(WORDS)).toUpperCase().slice(0, 24); spawnWord(W / 2, H * (0.2 + Math.random() * .25), w); return `<span class="dim">raining "${esc(w)}"…</span>`; },
+    color: a => { const m = {green:'#39ff7a', red:'#ff4b4b', cyan:'#38e8ff', amber:'#ffb000', white:'#e8ffe8'}; if (!m[a[0]]) return 'usage: color green|red|cyan|amber|white'; color = m[a[0]]; document.documentElement.style.setProperty('--g', color); return `<span class="dim">color → ${a[0]}</span>`; },
+    speed: a => { const v = parseFloat(a[0]); if (!(v >= .2 && v <= 4)) return 'usage: speed 0.2–4'; speed = v; return `<span class="dim">speed → ${v}</span>`; },
+    clear: () => { out.innerHTML = ''; return null; },
+    exit: () => { setTimeout(() => location.href = 'https://github.com/sun-of-anton', 500); return 'unplugging…'; },
+    // hidden
+    redpill: () => { CMDS.color(['red']); spawnWord(W/2, H*.3, "WAKE UP, NEO"); return `<span class="red">you stay in Wonderland. let's see how deep the rabbit hole goes.</span>`; },
+    bluepill: () => { setTimeout(() => location.href = 'https://github.com/sun-of-anton', 1500); return 'the story ends. you wake up in your bed (on GitHub)…'; },
+    sudo: () => `<span class="red">nice try.</span> this incident will be reported.`,
+    'ls': () => `about.txt  career.log  certs/  secrets/  <span class="dim">(try cat)</span>`,
+    cat: a => a[0] === 'secrets/' || a[0] === 'secrets' ? 'permission denied: IL5 says no.' : (CMDS[{'about.txt':'whoami','career.log':'career','certs/':'certs'}[a[0]]] || (() => `cat: ${esc(a[0]||'')}: no such file`))(),
+    hello: () => 'Hello, World! 👋',
+    'follow': a => a.join(' ').includes('white rabbit') ? (spawnWord(W/2,H*.3,"KNOCK KNOCK"), '🐇 knock, knock.') : 'follow what?',
+    coffee: () => 'brewing… ☕ (agentic AI cannot do this yet)'
+  };
+
+  print(`<span class="hi">Wake up…</span> the Matrix has you.
+<span class="dim">click the rain · type </span><span class="hi">help</span><span class="dim"> to look around</span>`);
+  const hist = []; let hi = 0;
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const raw = inp.value.trim(); inp.value = '';
+      if (!raw) return;
+      hist.push(raw); hi = hist.length;
+      print(`<span class="dim">anthony@matrix:~$</span> ${esc(raw)}`);
+      const [cmd, ...args] = raw.split(/\s+/);
+      const f = CMDS[cmd.toLowerCase()];
+      const r = f ? f(args) : `command not found: ${esc(cmd)} — try <span class="hi">help</span>`;
+      if (r) print(r);
+    } else if (e.key === 'ArrowUp') { if (hi > 0) inp.value = hist[--hi]; e.preventDefault(); }
+    else if (e.key === 'ArrowDown') { inp.value = hi < hist.length - 1 ? hist[++hi] : (hi = hist.length, ''); }
+  });
+  document.getElementById('min').onclick = () => term.classList.toggle('small');
+  if (matchMedia('(pointer:fine)').matches) inp.focus();
+  term.addEventListener('pointerdown', e => { if (e.target.tagName !== 'A' && e.target.id !== 'min') setTimeout(() => inp.focus(), 0); });
+})();
+</script>
+</body>
+</html>

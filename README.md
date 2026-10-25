@@ -3,8 +3,13 @@
      Lives in the public repo sun-of-anton/sun-of-anton
      ============================================================ -->
 
-<!-- Matrix rain intro: letters fall and land to spell the header (assets/matrix-intro.svg) -->
-<picture><img src="./assets/matrix-intro.svg" width="100%" alt="Hi, I'm Anthony — AI Solutions Architect // Software Engineer"/></picture>
+<!-- Matrix rain intro (assets/matrix-intro.svg) loops through scenes; clicking opens the interactive version (docs/index.html on GitHub Pages) -->
+<a href="https://sun-of-anton.github.io/sun-of-anton/"><img src="./assets/matrix-intro.svg" width="100%" alt="Hello World! I'm Anthony — AI Solutions Architect // Software Engineer. Click to enter the Matrix."/></a>
+
+<p align="center">
+  <a href="https://sun-of-anton.github.io/sun-of-anton/"><img src="https://img.shields.io/badge/💊_Red_pill-enter_the_Matrix-cc0000?style=for-the-badge" alt="Red pill: enter the interactive Matrix"/></a>
+  <a href="#-right-now"><img src="https://img.shields.io/badge/💊_Blue_pill-stay_on_GitHub-0044cc?style=for-the-badge" alt="Blue pill: keep reading"/></a>
+</p>
 
 <p align="center">
   <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&pause=1200&color=36BCF7&center=true&vCenter=true&width=680&lines=Designing+agentic+AI+systems+that+actually+ship;AWS+GovCloud+architecture+for+locked-down+environments;From+Navy+EOD+to+aerospace+to+cloud+%E2%98%81%EF%B8%8F;Turning+manual+workflows+into+automated+ones" alt="typing tagline"/>
