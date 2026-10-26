@@ -150,9 +150,9 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 ### 📝 Latest activity
 
 <!--START_SECTION:activity-->
-1. 💪 Opened PR [#2](https://github.com/sun-of-anton/sun-of-anton/pull/2) in [sun-of-anton/sun-of-anton](https://github.com/sun-of-anton/sun-of-anton)
-2. 🎉 Merged PR [#1](https://github.com/sun-of-anton/sun-of-anton/pull/1) in [sun-of-anton/sun-of-anton](https://github.com/sun-of-anton/sun-of-anton)
-3. 💪 Opened PR [#1](https://github.com/sun-of-anton/sun-of-anton/pull/1) in [sun-of-anton/sun-of-anton](https://github.com/sun-of-anton/sun-of-anton)
+1. 🎉 Merged PR [#1](https://github.com/fleethacker-data-crucible/edge-ops-draft/pull/1) in [fleethacker-data-crucible/edge-ops-draft](https://github.com/fleethacker-data-crucible/edge-ops-draft)
+2. 💪 Opened PR [#1](https://github.com/fleethacker-data-crucible/edge-ops-draft/pull/1) in [fleethacker-data-crucible/edge-ops-draft](https://github.com/fleethacker-data-crucible/edge-ops-draft)
+3. 💪 Opened PR [#2](https://github.com/sun-of-anton/sun-of-anton/pull/2) in [sun-of-anton/sun-of-anton](https://github.com/sun-of-anton/sun-of-anton)
 <!--END_SECTION:activity-->
 
 ---
