@@ -625,7 +625,7 @@
     {re: /\b(certs?|certified|certifications?|security\+?|comptia|scrum)\b/, run: async () => { await talk('MORPHEUS', "Words are easy. Let him show you."); return CMDS.certs(); }},
     {re: /\b(career|experience|history|background|resume|navy|boeing|northrop|caci|hii|journey|path)\b/,
      run: async () => CMDS.career()},
-    {re: /\b(where|located|location|based|his work|what does he do|agentic|agents?|ai|llm|claude|gpt|machine learning|working on|currently|right now|project|mission|building)\b/,
+    {re: /\b(where|located|location|based|his work|what does he do|agentic|agents?|ai|llm|gpt|machine learning|working on|currently|right now|project|mission|building)\b/,
      run: async () => { await talk('MORPHEUS', "The machines are coming. He's teaching them to work for us."); return CMDS.whereareyou(); }},
     {re: /\b(who (is|are)|about|anthony|yourself|bio|tell me)\b/, run: async () => { await talk('MORPHEUS', "You want to know who he is. Only the Oracle can tell you that."); return CMDS.whoareyou(); }},
     {re: /\b(real|matrix|dream|simulation)\b/, run: async () => { await talk('MORPHEUS', 'What is real? How do you define "real"?'); await talk('MORPHEUS', "If you're talking about what you can feel, what you can smell, taste and see… then real is simply electrical signals interpreted by your brain."); return null; }},
