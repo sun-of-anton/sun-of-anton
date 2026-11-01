@@ -107,7 +107,7 @@
     const BPM = 96, STEP = 60 / BPM / 4;
     // Em · C · Am · Bm: bass roots and the chord tones the arpeggio picks from
     const ROOTS = [40, 36, 33, 35], CHORDS = [[64, 67, 71], [60, 64, 67], [57, 60, 64], [59, 62, 66]];
-    const label = () => { const on = !!ac && !muted; btn.textContent = on ? '♪ on' : '♪ off'; btn.setAttribute('aria-pressed', String(on)); };
+    const label = () => { const on = !!ac && !muted && ac.state === 'running'; btn.textContent = on ? '♪ on' : '♪ off'; btn.setAttribute('aria-pressed', String(on)); };
     function env(g, t, peak, a, d) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); }
     function voice(type, f, t, peak, a, d, cut, to = master) {
       const o = ac.createOscillator(), fl = ac.createBiquadFilter(), g = ac.createGain();
@@ -138,8 +138,27 @@
       if (s === 0 || s === 8 || s === 10) voice('sawtooth', hz(ROOTS[ch]), t, 0.13, 0.01, 0.35, 700);
       if (arp[s] >= 0) { const k = arp[s]; voice('sawtooth', hz(CHORDS[ch][k % 3] + (k > 2 ? 12 : 0)), t, 0.05, 0.005, 0.28, 2600, bus); }
     }
+    // iPhones mute web audio when the ring/silent switch is on unless the page asks for media playback: newer Safari
+    // has audioSession for that; older iOS switches over when an <audio> element plays, so loop a silent clip there
+    let keepAlive = null;
+    function playThroughSilentMode() {
+      if (navigator.audioSession) { navigator.audioSession.type = 'playback'; return; }
+      if (!/iP(hone|ad|od)/.test(navigator.userAgent) && !(navigator.maxTouchPoints > 1 && /Mac/.test(navigator.userAgent))) return;
+      if (!keepAlive) {
+        const n = 800, b = new DataView(new ArrayBuffer(44 + n)), str = (o, s) => [...s].forEach((ch, i) => b.setUint8(o + i, ch.charCodeAt(0)));
+        str(0, 'RIFF'); b.setUint32(4, 36 + n, true); str(8, 'WAVEfmt '); b.setUint32(16, 16, true); b.setUint16(20, 1, true);
+        b.setUint16(22, 1, true); b.setUint32(24, 8000, true); b.setUint32(28, 8000, true); b.setUint16(32, 1, true);
+        b.setUint16(34, 8, true); str(36, 'data'); b.setUint32(40, n, true);
+        for (let i = 0; i < n; i++) b.setUint8(44 + i, 128);                // 0.1 s of 8-bit silence
+        keepAlive = new Audio(URL.createObjectURL(new Blob([b], {type: 'audio/wav'})));
+        keepAlive.loop = true; keepAlive.setAttribute('playsinline', '');
+      }
+      keepAlive.play().catch(() => {});
+    }
     function start() {
+      playThroughSilentMode();
       ac = new (window.AudioContext || window.webkitAudioContext)();
+      ac.onstatechange = label;
       master = ac.createGain(); master.gain.value = 0.0001;
       const comp = ac.createDynamicsCompressor(); master.connect(comp).connect(ac.destination);
       // everything melodic goes through a dotted-eighth echo that darkens as it repeats
@@ -163,15 +182,22 @@
       if (!ac) return;
       const t = ac.currentTime;
       master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(Math.max(0.0001, master.gain.value), t);
-      if (muted) { master.gain.exponentialRampToValueAtTime(0.0001, t + 0.4); setTimeout(() => muted && ac.suspend(), 500); }
-      else { ac.resume(); master.gain.exponentialRampToValueAtTime(0.5, t + 2.5); }
+      if (muted) { master.gain.exponentialRampToValueAtTime(0.0001, t + 0.4); setTimeout(() => muted && ac.suspend(), 500); if (keepAlive) keepAlive.pause(); }
+      else { playThroughSilentMode(); ac.resume(); master.gain.exponentialRampToValueAtTime(0.5, t + 2.5); }
       label();
     }
-    // first click or key anywhere starts it (unless they switched it off last visit); the button toggles
-    const first = e => { if (ac || muted || e.target === btn) return; start(); };
-    addEventListener('pointerdown', first, true); addEventListener('keydown', first, true);
+    // first click, tap or key anywhere starts it (unless they switched it off last visit); the button toggles.
+    // Browsers differ on which events may unlock audio (iOS ignores pointerdown and counts touchend and click), so
+    // listen to all of them and keep retrying until it is actually running.
+    const poke = e => {
+      if (muted || e.target === btn || document.hidden) return;
+      if (!ac) start(); else if (ac.state !== 'running') { playThroughSilentMode(); ac.resume(); }
+    };
+    ['pointerdown', 'touchend', 'click', 'keydown'].forEach(ev => addEventListener(ev, poke, true));
     btn.addEventListener('click', () => {
-      if (!ac) { muted = false; start(); } else { muted = !muted; fade(); }
+      if (!ac) { muted = false; start(); }
+      else if (!muted && ac.state !== 'running') fade();                  // it was blocked, not switched off: try again
+      else { muted = !muted; fade(); }
       try { localStorage.setItem('matrix-muted', muted ? '1' : '0'); } catch {}
     });
     document.addEventListener('visibilitychange', () => { if (!ac || muted) return; document.hidden ? ac.suspend() : ac.resume(); });
