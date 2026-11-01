@@ -27,11 +27,14 @@
   #in{flex:1;background:transparent;border:0;outline:0;color:#fff;font:inherit;caret-color:var(--g)}
   #min{margin-left:auto;cursor:pointer;background:none;border:1px solid #145c2a;color:var(--g);border-radius:4px;font:inherit;font-size:11px;padding:1px 6px}
   #term.small #out,#term.small #line{display:none}
+  #snd{position:fixed;top:12px;right:12px;z-index:2;cursor:pointer;background:rgba(0,8,3,.75);border:1px solid #145c2a;color:var(--g);border-radius:4px;font:inherit;font-size:12px;padding:3px 8px;opacity:.7}
+  #snd:hover,#snd:focus-visible{opacity:1}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 <div id="hint"></div>
+<button id="snd" aria-pressed="false" title="music">♪ off</button>
 <div id="term" aria-hidden="true">
   <div id="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>&nbsp; anthony@matrix: ~ <button id="min" title="minimize">_</button></div>
   <div id="out"></div>
@@ -93,6 +96,98 @@
   const redXY = () => ({x: red.col * CELL + CELL / 2, y: red.head * CELL + CELL / 2});
   const say = s => { hintEl.innerHTML = s; hintEl.style.opacity = s ? .85 : 0; };
 
+  // ---------- the score: synthesized live with Web Audio, no audio files ----------
+  // A drone that follows the bass, a heartbeat kick, ticking like falling code, and minor-chord arpeggios into a
+  // long echo. Browsers only allow sound after a click or key press, so it starts on the visitor's first one.
+  const sound = (() => {
+    const btn = document.getElementById('snd');
+    let ac = null, master, bus, noise, drone = [], muted = false, step = 0, next = 0, arp = [];
+    try { muted = localStorage.getItem('matrix-muted') === '1'; } catch {}
+    const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+    const BPM = 96, STEP = 60 / BPM / 4;
+    // Em · C · Am · Bm: bass roots and the chord tones the arpeggio picks from
+    const ROOTS = [40, 36, 33, 35], CHORDS = [[64, 67, 71], [60, 64, 67], [57, 60, 64], [59, 62, 66]];
+    const label = () => { const on = !!ac && !muted; btn.textContent = on ? '♪ on' : '♪ off'; btn.setAttribute('aria-pressed', String(on)); };
+    function env(g, t, peak, a, d) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); }
+    function voice(type, f, t, peak, a, d, cut, to = master) {
+      const o = ac.createOscillator(), fl = ac.createBiquadFilter(), g = ac.createGain();
+      o.type = type; o.frequency.value = f; fl.type = 'lowpass';
+      fl.frequency.setValueAtTime(cut, t); fl.frequency.exponentialRampToValueAtTime(Math.max(80, cut / 8), t + a + d);
+      env(g, t, peak, a, d); o.connect(fl).connect(g).connect(to);
+      o.start(t); o.stop(t + a + d + 0.05);
+    }
+    function hiss(t, peak, d, type, f0, f1) {
+      const s = ac.createBufferSource(), fl = ac.createBiquadFilter(), g = ac.createGain();
+      s.buffer = noise; fl.type = type; fl.frequency.setValueAtTime(f0, t); fl.frequency.exponentialRampToValueAtTime(f1, t + d);
+      env(g, t, peak, 0.005, d); s.connect(fl).connect(g).connect(master);
+      s.start(t, Math.random() * 0.5); s.stop(t + d + 0.05);
+    }
+    function kick(t, peak) {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(38, t + 0.18);
+      env(g, t, peak, 0.004, 0.4); o.connect(g).connect(master); o.start(t); o.stop(t + 0.5);
+    }
+    function play(n, t) {
+      const bar = Math.floor(n / 16), s = n % 16, ch = bar % 4;
+      if (s === 0) {
+        drone.forEach((o, i) => o.frequency.setTargetAtTime(hz(ROOTS[ch] - 12 + i * 12) * (i ? 1.004 : 1), t, 0.4));
+        if (bar % 4 === 0) arp = Array.from({length: 16}, () => Math.random() < 0.55 ? Math.floor(Math.random() * 6) : -1);
+      }
+      if (s === 0 || s === 3) kick(t, s ? 0.3 : 0.55);                       // lub-dub
+      if (s % 2 === 1 && Math.random() < 0.7) hiss(t, 0.02 + Math.random() * 0.02, 0.04, 'highpass', 6000 + Math.random() * 4000, 9000);
+      if (s === 0 || s === 8 || s === 10) voice('sawtooth', hz(ROOTS[ch]), t, 0.13, 0.01, 0.35, 700);
+      if (arp[s] >= 0) { const k = arp[s]; voice('sawtooth', hz(CHORDS[ch][k % 3] + (k > 2 ? 12 : 0)), t, 0.05, 0.005, 0.28, 2600, bus); }
+    }
+    function start() {
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      master = ac.createGain(); master.gain.value = 0.0001;
+      const comp = ac.createDynamicsCompressor(); master.connect(comp).connect(ac.destination);
+      // everything melodic goes through a dotted-eighth echo that darkens as it repeats
+      bus = ac.createGain();
+      const dl = ac.createDelay(2), fb = ac.createGain(), tone = ac.createBiquadFilter();
+      dl.delayTime.value = STEP * 3; fb.gain.value = 0.45; tone.type = 'lowpass'; tone.frequency.value = 1800;
+      bus.connect(master); bus.connect(dl); dl.connect(tone).connect(fb).connect(dl); tone.connect(master);
+      noise = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
+      noise.getChannelData(0).forEach((_, i, a) => { a[i] = Math.random() * 2 - 1; });
+      // the drone: two detuned saws an octave apart through a slowly breathing lowpass
+      const dlp = ac.createBiquadFilter(), dg = ac.createGain(), lfo = ac.createOscillator(), lg = ac.createGain();
+      dlp.type = 'lowpass'; dlp.frequency.value = 220; dlp.Q.value = 5; dg.gain.value = 0.12;
+      lfo.frequency.value = 0.06; lg.gain.value = 140; lfo.connect(lg).connect(dlp.frequency); lfo.start();
+      drone = [0, 1].map(i => { const o = ac.createOscillator(); o.type = 'sawtooth'; o.frequency.value = hz(28 + i * 12); o.connect(dlp); o.start(); return o; });
+      dlp.connect(dg).connect(master);
+      next = ac.currentTime + 0.1;
+      setInterval(() => { if (ac.state !== 'running') return; while (next < ac.currentTime + 0.12) { play(step++, next); next += STEP; } }, 30);
+      fade();
+    }
+    function fade() {
+      if (!ac) return;
+      const t = ac.currentTime;
+      master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(Math.max(0.0001, master.gain.value), t);
+      if (muted) { master.gain.exponentialRampToValueAtTime(0.0001, t + 0.4); setTimeout(() => muted && ac.suspend(), 500); }
+      else { ac.resume(); master.gain.exponentialRampToValueAtTime(0.5, t + 2.5); }
+      label();
+    }
+    // first click or key anywhere starts it (unless they switched it off last visit); the button toggles
+    const first = e => { if (ac || muted || e.target === btn) return; start(); };
+    addEventListener('pointerdown', first, true); addEventListener('keydown', first, true);
+    btn.addEventListener('click', () => {
+      if (!ac) { muted = false; start(); } else { muted = !muted; fade(); }
+      try { localStorage.setItem('matrix-muted', muted ? '1' : '0'); } catch {}
+    });
+    document.addEventListener('visibilitychange', () => { if (!ac || muted) return; document.hidden ? ac.suspend() : ac.resume(); });
+    label();
+    return {
+      // a low boom and a falling wash of noise: for waking up and for things pressing through the rain
+      hit() {
+        if (!ac || muted) return;
+        const t = ac.currentTime + 0.02, o = ac.createOscillator(), g = ac.createGain();
+        o.frequency.setValueAtTime(70, t); o.frequency.exponentialRampToValueAtTime(28, t + 1.4);
+        env(g, t, 0.6, 0.01, 1.6); o.connect(g).connect(master); o.start(t); o.stop(t + 1.7);
+        hiss(t, 0.12, 1.8, 'lowpass', 5000, 150);
+      }
+    };
+  })();
+
 
   // ---------- something pressing through the code ----------
   // The rain is a membrane. A depth map pushes it toward the viewer: rain bends outward over the form, and the code
@@ -130,6 +225,7 @@
   let fx = null;
   function startFx(kind) {
     const s = SHAPES[kind], base = unpack(s.src), side = s.fit(W, H);
+    sound.hit();
     const low = typeof s.low === 'function' ? s.low(H / side) : s.low;
     const x0 = (W - side) / 2, y0 = H - side * low;                        // it rises out of the bottom of the screen
     const g = Math.max(8, Math.round(CELL * (s.grid || 0.42))), pts = [], cols = [];   // the surface's own rain is finer than the screen's
@@ -378,7 +474,7 @@
     if (found) return; found = true; busy = true;
     say(''); hints = []; pulses = []; red = null;
     for (let i = 0; i < 4; i++) setTimeout(() => pulses.push({x: gx, y: gy, r: 4}), i * 180);
-    spawnWord(W / 2, H * 0.22, 'WAKE UP');
+    spawnWord(W / 2, H * 0.22, 'WAKE UP'); sound.hit();
     term.classList.add('open'); term.setAttribute('aria-hidden', 'false');
     await sleep(600);
     await type('Wake up…', 'hi', 90); await sleep(900);
