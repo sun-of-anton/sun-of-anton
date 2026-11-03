@@ -129,18 +129,15 @@ select{font:inherit;padding:6px;border-radius:4px;background:#f8faf6;color:#1728
   .print-page[data-length="3"] aside h2{margin-top:6px;padding-top:5px;margin-bottom:4px}
   .print-page[data-length="3"] aside ul{line-height:1.15}
 }
-/* red-pill entrance (?enter=1): green rain builds the page character by character, then the green fades to ink on paper */
-/* .boot (set in the head before first paint) and .intro (while the rain builds) share one black start state, so nothing ever fades from the paper version */
+/* red-pill entrance (?enter=1): the rain builds the page and a paper-white front follows it down the screen */
 .boot body,body.intro{background:#000}
-.boot .toolbar,.boot .edition-note,.intro .toolbar,.intro .edition-note{opacity:0}
-.boot .sheet,.intro .sheet{background:#000;border-top-color:#145c2a}
-.boot .sheet,.boot .sheet *,.intro .sheet,.intro .sheet *{color:transparent !important;border-color:#145c2a !important}
-.boot .position summary::after,.intro .position summary::after{color:transparent}
-body{transition:background-color 1.8s}
-.sheet,.sheet *{transition:color 1.8s,background-color 1.8s,border-color 1.8s}
-.toolbar,.edition-note{transition:opacity 1.6s}
-#rain-intro{position:fixed;inset:0;width:100%;height:100%;z-index:50;pointer-events:none;transition:opacity 1.8s}
-@media print{#rain-intro{display:none}}
+.boot .toolbar,.boot .edition-note,.boot .sheet{visibility:hidden}
+body.intro{-webkit-mask-image:linear-gradient(to bottom,#000 calc(var(--front,-100px) - 60px),transparent calc(var(--front,-100px) + 30px));mask-image:linear-gradient(to bottom,#000 calc(var(--front,-100px) - 60px),transparent calc(var(--front,-100px) + 30px))}
+body{transition:background-color 1.4s}
+.boot .sheet,.boot .sheet *,.intro .sheet,.intro .sheet *,.boot .toolbar,.boot .toolbar *,.intro .toolbar,.intro .toolbar *{pointer-events:none}   /* no hover or clicks until the build is done (a click anywhere still skips it) */
+.intro .sheet *:focus-visible{outline-color:transparent}
+#rain-intro{position:fixed;inset:0;width:100%;height:100%;z-index:50;pointer-events:none;transition:opacity 1.1s}
+@media print{#rain-intro{display:none}body.intro{-webkit-mask-image:none;mask-image:none}}
 </style>
 </head>
 <body>
@@ -501,17 +498,18 @@ body{transition:background-color 1.8s}
   const html = document.documentElement, body = document.body;
   if (!html.classList.contains('boot')) return;
   const cv = document.createElement('canvas');
-  const cleanup = () => { cv.remove(); html.style.overflow = ''; body.classList.remove('intro'); html.classList.remove('boot'); };
+  const cleanup = () => { cv.remove(); html.style.overflow = ''; html.style.removeProperty('--front'); body.classList.remove('intro'); html.classList.remove('boot'); };
   try {
     scrollTo(0, 0); html.style.overflow = 'hidden';
     const GLY = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン0123456789Z=*+<>:';
-    cv.id = 'rain-intro'; body.append(cv);
+    cv.id = 'rain-intro'; html.append(cv);                                  // on <html>, outside the masked body
     const x = cv.getContext('2d'), COL = 14, TRAIL = 16;
     let W = innerWidth, H = innerHeight;
     const dpr = Math.min(2, devicePixelRatio || 1);
     const fit = () => { W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0); };
     fit(); addEventListener('resize', fit);
-    body.classList.add('intro'); html.classList.remove('boot');            // text goes transparent: the canvas is the page until the reveal
+    html.style.setProperty('--front', '-100px');                            // the paper-white front starts above the page
+    body.classList.add('intro'); html.classList.remove('boot');
 
     // every visible character of the sheet: where it sits and what it looks like
     const chars = [], range = document.createRange();
@@ -531,21 +529,31 @@ body{transition:background-color 1.8s}
       }
     }
     // each rain column falls at its own pace; a character is built when its column's head passes it
-    const cols = Array.from({length: Math.ceil(W / COL)}, () => ({speed: 230 + Math.random() * 150, delay: Math.random() * 1.6}));
+    const BUILD = 8;                                                        // seconds until the slowest column has built its last character
+    const cols = Array.from({length: Math.ceil(W / COL)}, () => {
+      const delay = Math.random() * 3.2, floor = (H + 40) / (BUILD - delay);   // slow columns still have to finish inside BUILD
+      return {delay, speed: Math.max(floor, 120 + Math.random() * 280)};       // wide spread: some streams crawl, some race
+    });
     const colOf = c => cols[Math.min(cols.length - 1, Math.floor(c.cx / COL))];
-    let doneAt = 3;
-    for (const c of chars) { const k = colOf(c); doneAt = Math.max(doneAt, k.delay + (c.cy + 20) / k.speed); }
-    doneAt += 0.8;
 
-    const t0 = performance.now(); let ended = false;
-    function reveal() {
-      body.classList.remove('intro');                                       // black to paper, transparent to ink
-      cv.style.opacity = '0';                                              // while the green thins out
-      setTimeout(cleanup, 2200);
+    // the paper front: sits just above the topmost character the rain hasn't built yet, so a section turns to ink on paper
+    // only once it is complete. Green fades out across the same band the paper fades in.
+    const firstY = chars.reduce((m, c) => Math.min(m, c.cy), Infinity);        // the top line (the AI SYSTEMS kicker)
+    let front = -100, last = performance.now(), ended = false;
+    const keep = y => Math.min(1, Math.max(0, (y - (front - 60)) / 90));      // 0 above the front (paper), 1 below it (still rain)
+    function finish() {
+      body.classList.remove('intro');                                       // lift the mask: the whole page is paper and ink
+      cv.style.opacity = '0';
+      setTimeout(cleanup, 1300);
     }
+    const skipIntro = () => { if (!ended) { ended = true; finish(); } };     // any click, tap or key jumps to the finished page
+    addEventListener('pointerdown', skipIntro, {once: true});
+    addEventListener('keydown', skipIntro, {once: true});
+
+    const t0 = performance.now();
     function frame(now) {
       if (!cv.isConnected) return;
-      const t = (now - t0) / 1000;
+      const t = (now - t0) / 1000, dt = Math.min(0.05, (now - last) / 1000); last = now;
       x.clearRect(0, 0, W, H);
       x.textBaseline = 'middle'; x.textAlign = 'center'; x.font = '15px "Courier New",monospace';
       cols.forEach((c, i) => {
@@ -554,19 +562,29 @@ body{transition:background-color 1.8s}
         for (let k = 0; k < TRAIL; k++) {
           const y = head - k * 18;
           if (y < -10 || y > H + 10) continue;
-          x.fillStyle = k === 0 ? '#e8ffe8' : `rgba(57,255,122,${(1 - k / TRAIL) * 0.75})`;
+          const a = keep(y) * (k === 0 ? 1 : (1 - k / TRAIL) * 0.75);
+          if (a < 0.02) continue;
+          x.fillStyle = k === 0 ? `rgba(232,255,232,${a})` : `rgba(57,255,122,${a})`;
           x.fillText(GLY[(i * 7 + k * 13 + Math.floor(t * 9 + k)) % GLY.length], i * COL + COL / 2, y);
         }
       });
-      for (const c of chars) {                                              // what the rain has passed stays: white-hot, then green
-        if ((t - colOf(c).delay) * colOf(c).speed < c.cy) continue;
+      let blocked = Infinity;
+      for (const c of chars) {
+        const k = colOf(c);
+        if ((t - k.delay) * k.speed < c.cy) { if (c.cy < blocked) blocked = c.cy; continue; }
         if (!c.at) c.at = t;
-        const a = Math.min(1, (t - c.at) / 0.5);
-        x.font = c.font;
-        x.fillStyle = a < 1 ? `rgb(${Math.round(232 - 175 * a)},255,${Math.round(238 - 116 * a)})` : '#39ff7a';
+        const a = keep(c.cy);
+        if (a < 0.02) continue;                                             // the paper has taken this one
+        const heat = Math.min(1, (t - c.at) / 0.5);                         // white-hot, then green
+        x.font = c.font; x.globalAlpha = a;
+        x.fillStyle = heat < 1 ? `rgb(${Math.round(232 - 175 * heat)},255,${Math.round(238 - 116 * heat)})` : '#39ff7a';
         x.fillText(c.ch, c.cx, c.cy);
       }
-      if (!ended && t > doneAt) { ended = true; reveal(); }
+      x.globalAlpha = 1;
+      const target = blocked === Infinity ? H + 140 : blocked <= firstY + 6 ? -100 : blocked - 40;   // stay black until the first line is fully built
+      if (target > front) front = Math.min(target, front + 700 * dt);       // moves down only, never faster than 700px/s
+      html.style.setProperty('--front', front + 'px');
+      if (!ended && front >= H + 100) { ended = true; finish(); }
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
