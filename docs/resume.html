@@ -136,6 +136,8 @@ select{font:inherit;padding:6px;border-radius:4px;background:#f8faf6;color:#1728
 .boot .sheet,.intro .sheet{background:#000;border-top-color:#145c2a}
 .boot .sheet,.boot .sheet *,.intro .sheet,.intro .sheet *{color:transparent !important;border-color:#145c2a !important}
 .boot .position summary::after,.intro .position summary::after{color:transparent}
+.boot .sheet,.boot .sheet *,.intro .sheet,.intro .sheet *,.boot .toolbar,.boot .toolbar *,.intro .toolbar,.intro .toolbar *{pointer-events:none}   /* no hover or clicks until the build is done (a click anywhere still skips it) */
+.intro .sheet *:focus-visible{outline-color:transparent}
 body{transition:background-color 1.8s}
 .sheet,.sheet *{transition:color 1.8s,background-color 1.8s,border-color 1.8s}
 .toolbar,.edition-note{transition:opacity 1.6s}
