@@ -150,9 +150,9 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 ### 📝 Latest activity
 
 <!--START_SECTION:activity-->
-1. 🎉 Merged PR [#6](https://github.com/sun-of-anton/sun-of-anton/pull/6) in [sun-of-anton/sun-of-anton](https://github.com/sun-of-anton/sun-of-anton)
-2. 💪 Opened PR [#6](https://github.com/sun-of-anton/sun-of-anton/pull/6) in [sun-of-anton/sun-of-anton](https://github.com/sun-of-anton/sun-of-anton)
-3. 🎉 Merged PR [#5](https://github.com/sun-of-anton/sun-of-anton/pull/5) in [sun-of-anton/sun-of-anton](https://github.com/sun-of-anton/sun-of-anton)
+1. 🎉 Merged PR [#11](https://github.com/sun-of-anton/sun-of-anton/pull/11) in [sun-of-anton/sun-of-anton](https://github.com/sun-of-anton/sun-of-anton)
+2. 💪 Opened PR [#11](https://github.com/sun-of-anton/sun-of-anton/pull/11) in [sun-of-anton/sun-of-anton](https://github.com/sun-of-anton/sun-of-anton)
+3. 🎉 Merged PR [#10](https://github.com/sun-of-anton/sun-of-anton/pull/10) in [sun-of-anton/sun-of-anton](https://github.com/sun-of-anton/sun-of-anton)
 <!--END_SECTION:activity-->
 
 ---
