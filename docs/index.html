@@ -35,6 +35,7 @@
   #pill-nav a:hover{text-decoration:underline}
   #pill-nav a:focus-visible{outline:2px solid #fff;outline-offset:3px}
   #term.pill-scene{pointer-events:none}
+  @media (max-width:600px){#term.pill-scene{max-height:26vh}#term.pill-scene #out{font-size:12px;line-height:1.35}}
   #pill-red{color:#ff7676}
   #pill-blue{color:#79b7ff}
   #snd:hover,#snd:focus-visible{opacity:1}
@@ -248,7 +249,7 @@
     // emerge / release / dur in seconds; push = how far the surface bulges; (cu, cv) = the point it pushes out from;
     // fit = how big the map is drawn; low = the fraction of the map that reaches the bottom of the screen (or a function
     // of screen height / map size, to keep it centred)
-    pills: {src: PILLS_DEPTH, hold: true, dur: 6.5, emerge: 1.5, release: 4.8, push: 0.1, reach: 0.04, cu: 0.5, cv: 0.42, low: r => 0.47 + 0.45 * r, pills: true, grid: 0.34, gain: 0.82, fit: (W, H) => Math.min(W * 0.9, H * 1.5)},
+    pills: {src: PILLS_DEPTH, hold: true, dur: 6.5, emerge: 1.5, release: 4.8, push: 0.1, reach: 0.04, cu: 0.5, cv: 0.42, low: r => 0.47 + 0.45 * r, pills: true, grid: 0.34, gain: 0.82, fit: (W, H) => W < 600 ? Math.min(W * 1.35, H * 0.9) : Math.min(W * 0.9, H * 1.5)},
     // door: no baked map; anim(t) redraws it each frame as it swings open, and light marks the gap it leaves
     door: {anim: t => doorMap(sstep(2, 4.8, t)), light: (u, v) => u >= door.edge && u < DOOR.r && v >= DOOR.top && v < DOOR.sill,
            dur: 9.5, emerge: 1.4, release: 8, push: 0.1, reach: 0.02, cu: 0.5, cv: 0.5, low: 1, grid: 0.34, fit: (W, H) => Math.min(W * 0.95, H)},
@@ -539,7 +540,7 @@
     if (!fx?.s.pills) return -1;
     const {x0, y0, side, map} = fx;
     const u = (e.clientX - x0) / side * map.n, v = (e.clientY - y0) / side * map.n;
-    const reach = Math.max(7, 22 / side * map.n);
+    const reach = Math.max(7, (e.pointerType === 'touch' ? 38 : 22) / side * map.n);   // a fingertip needs a bigger target than a cursor
     return PILLS.findIndex(pill => Math.hypot(u - pill.u, v - pill.v) <= reach);
   };
   c.addEventListener('pointermove', e => { c.style.cursor = pillUnder(e) !== -1 ? 'pointer' : ''; });
@@ -775,7 +776,7 @@
           await talk('MORPHEUS', 'You followed the glitch this far. Now choose.');
           await talk('MORPHEUS', 'Take the blue pill, and you walk back to GitHub.');
           await talk('MORPHEUS', 'Take the red pill, and I will show you what Anthony built.', 'red');
-          print('<span class="dim">click or tap a pill: </span><a href="./resume.html?enter=1">red · résumé</a> <span class="dim">or</span> <a href="https://github.com/sun-of-anton">blue · GitHub</a> <span class="dim">(esc to go back)</span>');
+          print('<span class="dim">click or tap a pill: </span><a href="./resume.html?enter=1">red · résumé</a> <span class="dim">or</span> <a href="https://github.com/sun-of-anton">blue · GitHub</a>' + (matchMedia('(pointer:fine)').matches ? ' <span class="dim">(esc to go back)</span>' : ''));
         })()]);                                                            // the hands stay up until a pill is picked (or esc / enter)
       } finally {
         term.classList.remove('pill-scene');
