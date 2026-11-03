@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anthony Hable | Résumé</title>
+<meta name="description" content="Anthony Hable, AI Solutions Architect and Software Engineer.">
+<script>try{if(/[?&]enter=1\b/.test(location.search)&&!matchMedia('(prefers-reduced-motion: reduce)').matches){var h=document.documentElement;h.classList.add('boot');setTimeout(function(){h.classList.remove('boot')},12000)}}catch(e){}</script>
+<style>
+:root{color-scheme:light;--ink:#172820;--soft:#45574e;--green:#176145;--line:#ccd8cf;--paper:#f8faf6}
+*{box-sizing:border-box}
+body{margin:0;background:#11241c;color:var(--ink);font:16px/1.55 system-ui,sans-serif}
+a{color:var(--green);text-underline-offset:.2em}
+.toolbar{max-width:980px;margin:auto;padding:24px 24px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;color:#dceee3}
+.kicker,.year,h2,.toolbar span{font:700 .75rem/1.4 ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase}
+button{background:#aef3cc;color:#11241c;border:0;border-radius:6px;padding:10px 15px;font:700 .9rem system-ui;cursor:pointer}
+a:focus-visible,button:focus-visible{outline:3px solid #25815e;outline-offset:4px}
+.sheet{max-width:932px;margin:0 auto 38px;background:var(--paper);border-top:6px solid #83d4a8;border-radius:3px;padding:clamp(24px,6vw,68px)}
+.kicker,h2,.year{color:var(--green)}
+h1{font:500 clamp(2.6rem,7vw,5.3rem)/1 Georgia,serif;letter-spacing:-.055em;margin:.2em 0 .14em}
+.role{font-size:clamp(1rem,3vw,1.3rem);font-weight:650;margin:0}
+.contacts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:12px 0 0;color:var(--soft);font-size:.9rem}
+.summary{margin:22px 0 0;max-width:66ch;color:var(--soft)}
+.columns{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:32px;margin-top:30px}
+h2{margin:0 0 12px;padding-top:10px;border-top:1px solid var(--line)}
+.job{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;margin-bottom:15px}
+.year{margin-top:.32em}
+h3{font-size:.98rem;line-height:1.3;margin:0 0 3px}
+.job p,aside p{color:var(--soft);margin:0;font-size:.9rem}
+aside section+section{margin-top:24px}
+ul{padding-left:1.05em;margin:0;color:var(--soft);font-size:.9rem}
+li+li{margin-top:5px}
+.earlier{margin:0;color:var(--soft);font-size:.9rem}
+@media(max-width:640px){.sheet{margin:0 12px 20px}.columns{grid-template-columns:1fr;gap:18px}.toolbar{padding-inline:16px}}
+.export-controls{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.export-controls label{font-size:.85rem}
+select{font:inherit;padding:6px;border-radius:4px;background:#f8faf6;color:#172820}
+.position{border-bottom:1px solid var(--line)}
+.position summary{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;padding:10px 4px;cursor:pointer;list-style:none}
+.position summary::-webkit-details-marker{display:none}
+.position summary::after{content:"+";color:var(--green)}
+.position[open] summary::after{content:"−"}
+.position summary:hover{background:#edf4ed}
+.position summary:focus-visible,select:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.position-detail{padding:0 10px 12px 62px;color:var(--soft);font-size:.9rem}
+.position-detail p{margin:0 0 5px}
+.position-detail ul:empty{display:none}
+.print-resume{display:none}
+@media(max-width:640px){.toolbar{align-items:flex-start;flex-direction:column}}
+@page{size:letter;margin:.45in}
+@media print{
+  body{background:white;font-size:11pt;line-height:1.4}
+  .toolbar,.edition-note,.sheet{display:none}
+  .print-resume{display:block}
+  .print-page + .print-page{break-before:page}
+  .print-page h1{font-size:40pt}
+  .print-page .role{font-size:13pt}
+  .print-page .contacts{font-size:10pt}
+  .print-page .summary{margin-top:13px}
+  .print-page h2{margin-top:18px}
+  .print-page h3{font-size:11pt}
+  .print-page article{margin-bottom:14px;break-inside:avoid}
+  .print-page article p{margin:4px 0}
+  .print-page article ul{font-size:10.5pt}
+  .print-page .year{margin-right:8px}
+  .print-page[data-length="1"]{font-size:9.5pt}
+  .print-page[data-length="1"] article{margin-bottom:7px}
+  .print-page[data-length="1"] h3{font-size:10pt}
+  .print-page[data-length="1"] h1{font-size:34pt}
+  .print-page[data-length="1"] h2{margin-top:12px;margin-bottom:7px}
+  .print-page[data-length="1"] .summary{margin-top:9px}
+  .print-page[data-length="1"] article p{margin:2px 0}
+}
+.position summary{grid-template-columns:minmax(0,1fr) auto 14px}
+.employer{display:block;font-size:.86rem;color:var(--soft)}
+.position-detail{padding-left:4px}
+.position-detail p{margin-bottom:9px}
+.position-meta{font-weight:650}
+.position .year{letter-spacing:.035em}
+@media(max-width:560px){.position summary{grid-template-columns:minmax(0,1fr) 14px}.position summary::after{grid-column:2;grid-row:1}.position summary .year{grid-column:1;margin-top:0}}
+@media print{
+  .print-page[data-length="1"] article{margin-bottom:5px}
+  .print-page[data-length="1"] .print-date{display:none}
+  .print-page[data-length="1"] aside section+section{margin-top:0}
+  .print-page[data-length="3"] article ul{font-size:9pt;line-height:1.28}
+  .print-page[data-length="3"] article li+li{margin-top:3px}
+  .print-page[data-length="3"] article{margin-bottom:8px}
+  .print-page[data-length="3"] h1{font-size:34pt}
+  .print-page[data-length="3"] aside ul{font-size:9pt}
+  .print-page[data-length="3"] aside section+section{margin-top:12px}
+  .print-date{font:normal 9pt system-ui;color:var(--soft)}
+}
+.edition-note{max-width:932px;margin:0 auto 12px;padding:0 4px;color:#dceee3;font-size:.9rem}
+@media(max-width:980px){.edition-note{padding-inline:16px}}
+.position-preview[hidden],.position-full[hidden]{display:none}
+@media print{
+   .print-page[data-length="2"] article{margin-bottom:9px}
+  .print-page[data-length="2"] article ul{font-size:10pt;line-height:1.27}
+  .print-page[data-length="2"] aside ul{font-size:9pt;line-height:1.25}
+  .print-page[data-length="2"] aside section+section{margin-top:12px}
+  .print-page[data-length="3"] article ul{font-size:9pt;line-height:1.15}
+  .print-page[data-length="3"] article li+li{margin-top:2px}
+  .print-page[data-length="3"] article{margin-bottom:7px}
+  .print-page[data-length="3"] h2{margin-top:12px;margin-bottom:7px}
+}
+.position.title-only summary{cursor:default}
+.position.title-only summary::after{content:none}
+@media print{
+  .print-page[data-length="3"] aside{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .print-page[data-length="3"] aside section+section{margin:0}
+  .print-page[data-length="3"] aside ul{line-height:1.25}
+  .print-page[data-length="3"] .summary{margin-top:8px}
+}
+@media print{
+  .print-page[data-length="3"] aside{display:block}
+  .print-page[data-length="3"] aside ul{columns:2;column-gap:20px}
+  .print-page[data-length="3"] aside li{break-inside:avoid;margin:0 0 3px}
+  .print-page[data-length="3"] aside section+section{margin-top:6px}
+}
+.skills-inventory{margin-top:28px;padding-top:12px;border-top:1px solid var(--line)}
+.skills-inventory summary{cursor:pointer;color:var(--green);font-weight:700}
+.skills-inventory ul{columns:3;column-gap:24px;margin-top:10px}
+.skills-inventory li{break-inside:avoid}
+.sheet:not([data-length="3"]) .skills-inventory{display:none}
+@media(max-width:640px){.skills-inventory ul{columns:2}}
+@media print{
+  .print-page .education p{display:inline}
+  .print-page .education p+p::before{content:" · "}
+  .print-page[data-length="3"] aside h2{margin-top:6px;padding-top:5px;margin-bottom:4px}
+  .print-page[data-length="3"] aside ul{line-height:1.15}
+}
+/* red-pill entrance (?enter=1): green rain builds the page character by character, then the green fades to ink on paper */
+.boot body{background:#000}
+.boot .sheet,.boot .toolbar,.boot .edition-note{visibility:hidden}
+body{transition:background-color 1.8s}
+.sheet,.sheet *{transition:color 1.8s,background-color 1.8s,border-color 1.8s}
+.toolbar,.edition-note{transition:opacity 1.6s}
+body.intro{background:#000}
+.intro .toolbar,.intro .edition-note{opacity:0}
+.intro .sheet{background:#000;border-top-color:#145c2a}
+.intro .sheet,.intro .sheet *{color:transparent !important;border-color:#145c2a !important}
+.intro .position summary::after{color:transparent}
+#rain-intro{position:fixed;inset:0;width:100%;height:100%;z-index:50;pointer-events:none;transition:opacity 1.8s}
+@media print{#rain-intro{display:none}}
+</style>
+</head>
+<body>
+<nav class="toolbar" aria-label="Résumé controls">
+  <span>Résumé / Anthony Hable</span>
+  <div class="export-controls">
+    <label for="length">Résumé length</label>
+    <select id="length">
+      <option value="1">1 page · concise</option>
+      <option value="2">2 pages · standard</option>
+      <option value="3" selected>3 pages · detailed</option>
+    </select>
+    <button id="export" type="button">Save as PDF</button>
+  </div>
+</nav>
+<p class="edition-note" id="edition-note" role="status"></p>
+<main class="sheet" data-length="3">
+  <header>
+    <div class="kicker">AI systems · Cloud architecture</div>
+    <h1>Anthony Hable</h1>
+    <p class="role">AI Solutions Architect / Software Engineer</p>
+    <div class="contacts">
+      <span>Hampton Roads, Virginia</span>
+      <a href="https://www.linkedin.com/in/ashable/">LinkedIn</a>
+      <a href="https://github.com/sun-of-anton">GitHub · sun-of-anton</a>
+    </div>
+    <p class="summary">I build agentic AI systems, secure AWS infrastructure, and automation for restricted environments. My work spans software development intelligence, agile product management, operational decision support, and enterprise data platforms.</p>
+  </header>
+  <div class="columns">
+    <section aria-labelledby="experience">
+      <h2 id="experience">Experience</h2>
+      <details class="position">
+        <summary><span><strong>Program Analyst - AWS Solutions Architect</strong><span class="employer">Norfolk Naval Shipyard</span></span><span class="year">Sep 2026 – Present</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">Sep 2026 – Present · Norfolk, Virginia, United States</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <ul><li>Design and develop AWS-based infrastructure and enterprise software solutions supporting federal operational requirements.</li><li>Architect and develop applications for restricted computing environments, accounting for approved technologies, local execution requirements, authentication controls, and limited external connectivity.</li><li>Apply AI-assisted software engineering techniques to accelerate application development, architectural analysis, troubleshooting, and workflow automation.</li><li>Design agentic AI systems for software development intelligence, autonomous agile product management, and operational decision support.</li><li>Develop intelligent applications supporting enterprise productivity, developer workflows, workforce capability analysis, and knowledge management.</li><li>Evaluate emerging technologies and architectural approaches for improving software delivery within constrained enterprise environments.</li></ul></div>
+        </div>
+        <template>Design AWS infrastructure and agentic AI applications for restricted federal environments.</template>
+      </details>
+      <details class="position">
+        <summary><span><strong>AWS Solutions Architect [T4]</strong><span class="employer">CACI International Inc</span></span><span class="year">Dec 2025 – Sep 2026</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">Dec 2025 – Sep 2026 · Norfolk, Virginia, United States</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <p>Served as a T4 Systems Engineer specializing in AWS solutions architecture, cloud-native software development, infrastructure automation, and AI-enabled modernization within secure Department of Defense environments.</p><p>As the team&#x27;s sole AWS-certified engineer, held end-to-end technical responsibility for architecting, securing, and automating an enterprise AWS GovCloud (IL5) data platform.</p><ul><li>AWS Solutions Architecture: Architected cloud-native infrastructure with multi-tier, multi-environment deployments supporting enterprise data analytics and digital transformation.</li><li>Infrastructure Automation: Developed reusable Infrastructure-as-Code frameworks and thousands of lines of Python automation, replacing manual workflows with modular, intelligent deployment tools.</li><li>Enterprise Data Engineering: Designed event-driven ETL pipelines integrating AWS Lambda, Step Functions, Glue, S3, and PostgreSQL for automated data processing and analytics.</li><li>AI-Enabled Software Engineering: Applied AI-assisted development to accelerate application engineering, architectural design, debugging, automation, and documentation.</li><li>Secure Systems Engineering: Implemented network isolation, least-privilege IAM, KMS encryption, and Secrets Manager integration within AWS GovCloud security requirements.</li><li>Technical Leadership: Independently managed infrastructure roadmaps, prioritized development backlogs, established architectural standards, and produced comprehensive technical documentation.</li><li>Enterprise Modernization: Transformed legacy processes into scalable, automated, cloud-native solutions while supporting cross-functional engineering collaboration.</li></ul></div>
+        </div>
+        <template>Owned an IL5 AWS GovCloud data platform and automated deployments and event-driven ETL.</template>
+      </details>
+      <details class="position">
+        <summary><span><strong>Electro Mechanical Engineer 3</strong><span class="employer">HII</span></span><span class="year">Sep 2024 – Nov 2024</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">Sep 2024 – Nov 2024 · Newport News, Virginia, United States</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <p>Supported enterprise technology modernization through product ownership, DevOps strategy, secure development infrastructure, and business process automation.</p><p>Combined engineering expertise with software delivery practices to improve organizational workflows, evaluate emerging technologies, and strengthen enterprise development capabilities.</p><ul><li>Technical Product Ownership: Managed product backlogs, prioritized requirements, and facilitated Agile ceremonies, including sprint planning, daily stand-ups, reviews, and retrospectives.</li><li>DevOps &amp; Development Infrastructure: Deployed and configured an air-gapped, on-premises server to evaluate secure software development capabilities within a restricted enterprise environment.</li><li>Enterprise Architecture Evaluation: Assessed on-premises and cloud-hosted Azure DevOps solutions, developing technical comparisons to support enterprise platform selection.</li><li>Workflow Automation: Developed Power Automate integrations to streamline Azure DevOps work item creation and reduce administrative overhead.</li><li>Enterprise Application Development: Designed and customized SharePoint solutions, Power Apps forms, and automated workflows to improve information management and operational efficiency.</li><li>Agile Leadership: Mentored junior Product Owners and promoted structured Agile practices across multidisciplinary teams.</li></ul></div>
+        </div>
+        <template>Deployed air-gapped DevOps infrastructure and automated Azure DevOps and SharePoint workflows.</template>
+      </details>
+      <details class="position">
+        <summary><span><strong>Learning Experience Specialist</strong><span class="employer">Velocity Consulting Solutions</span></span><span class="year">Feb 2023 – Oct 2023</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">Feb 2023 – Oct 2023 · Remote</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <p>Supported Boeing&#x27;s enterprise engineering technology transformation through Dassault Systèmes, designing technical learning solutions, digital enablement strategies, and engineering knowledge management systems.</p><ul><li>Enterprise Technology Modernization: Supported the transition from legacy CATIA engineering workflows to the 3DEXPERIENCE platform by developing technical training and adoption resources.</li><li>Technical Solution Design: Architected digital learning experiences integrating interactive simulations, engineering demonstrations, multimedia content, and structured learning pathways.</li><li>AI-Enabled Content Development: Leveraged emerging AI technologies, including synthetic voice generation and automated media production, to accelerate technical content creation.</li><li>Engineering Knowledge Management: Translated complex engineering processes into accessible technical learning solutions, collaborating directly with subject matter experts.</li><li>Agile Project Delivery: Coordinated technical development activities using Azure DevOps, contributing to a 20% reduction in content development cycle time.</li><li>Cross-Functional Collaboration: Worked with engineering stakeholders to identify knowledge gaps, improve technical onboarding, and support enterprise software adoption.</li></ul></div>
+        </div>
+        <template>Supported Boeing’s 3DEXPERIENCE rollout and helped cut training content development time by 20%.</template>
+      </details>
+      <details class="position">
+        <summary><span><strong>Software Engineer II</strong><span class="employer">Northrop Grumman</span></span><span class="year">Jun 2020 – Jul 2022</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">Jun 2020 – Jul 2022 · Elkton, Maryland, United States</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <p>Supported advanced aerospace and defense engineering programs, specializing in systems integration, engineering software, environmental qualification testing, and technical verification.</p><ul><li>Systems Engineering &amp; Integration: Supported the development and qualification of advanced aerospace systems, integrating hardware, software, instrumentation, and environmental testing requirements.</li><li>Engineering Software &amp; Analytics: Utilized MATLAB to analyze telemetry data, evaluate thrust vector control actuator frequency responses, and develop statistical engineering reports, contributing to a 20% reduction in project delays.</li><li>Test Systems Development: Designed and assembled mobile environmental ground support equipment integrating power systems, PXI instrumentation, and controller checkout capabilities.</li><li>Software Verification &amp; Validation: Contributed to software architecture documentation, test plans, acceptance criteria, verification procedures, and user experience specifications for LabVIEW-based engineering applications.</li><li>Technical Leadership: Guided technicians through avionics test equipment checkout procedures and supported LabVIEW deployment and instrumentation workflows.</li><li>Program Execution: Coordinated multidisciplinary environmental qualification activities involving vibration, shock, thermal, altitude, and electromagnetic testing, helping deliver a major development program three months ahead of schedule.</li></ul></div>
+        </div>
+        <template>Analyzed aerospace telemetry and coordinated qualification testing, helping deliver a program three months early.</template>
+      </details>
+      <details class="position">
+        <summary><span><strong>Structural and Payloads Design Engineer II</strong><span class="employer">Boeing</span></span><span class="year">Oct 2018 – Jun 2020</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">Oct 2018 – Jun 2020 · Renton, Washington, United States</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <p>Supported commercial aircraft engineering programs while leading digital transformation, workflow automation, and knowledge management initiatives to improve engineering productivity and organizational effectiveness.</p><ul><li>Engineering &amp; Product Development: Developed structural and payload design solutions for commercial aircraft, supporting production readiness, engineering quality, and configuration management.</li><li>Enterprise Workflow Automation: Architected and implemented SharePoint-based engineering workflows, automated notifications, and review tracking systems, improving team efficiency by 30%.</li><li>Workforce Intelligence &amp; Analytics: Led development of a knowledge-gap analysis solution using structured competency data, automated workflows, and interactive spider graph visualizations, contributing to a 15% improvement in team performance.</li><li>Digital Transformation: Identified opportunities to replace manual engineering processes with integrated digital solutions, improving transparency, collaboration, and operational efficiency.</li><li>Technical Knowledge Management: Developed interactive engineering learning resources using Camtasia, Snagit, and Articulate Storyline, accelerating new engineer time-to-productivity by 50%.</li><li>Cross-Functional Engineering: Collaborated across engineering disciplines to streamline product configuration development, contributing to a 25% improvement in time-to-market for new configurations.</li></ul></div>
+        </div>
+        <template>Automated engineering workflows, improving team efficiency by 30%, and built a workforce competency tool.</template>
+      </details>
+      <details class="position">
+        <summary><span><strong>Fire Safety Engineer</strong><span class="employer">AECOM</span></span><span class="year">Mar 2017 – Sep 2018</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">Mar 2017 – Sep 2018 · Tampa, Florida, United States</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <p>Provided engineering design, technical analysis, and project coordination for complex fire protection and life safety systems.</p><ul><li>Developed engineering design criteria and technical specifications for integrated industrial fire protection systems.</li><li>Managed fire protection engineering activities for the U.S. Military Academy at West Point, including system redesign, hydraulic analysis, regulatory compliance, and 3D model coordination.</li><li>Integrated multidisciplinary engineering requirements to develop compliant, technically sound solutions for complex facilities.</li></ul></div>
+        </div>
+        <template>Managed fire protection redesign, hydraulic analysis, and model coordination for West Point.</template>
+      </details>
+      <details class="position">
+        <summary><span><strong>Mechanical Engineer II</strong><span class="employer">L3 Technologies</span></span><span class="year">Oct 2015 – Mar 2016</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">Oct 2015 – Mar 2016 · Sarasota, Florida, United States</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <p>Supported aerospace and defense technology development, specializing in mechanical systems engineering, component miniaturization, and multidisciplinary product design.</p><ul><li>Engineered miniaturized satellite data unit components, contributing to a 25% reduction in overall unit size and weight.</li><li>Conducted material testing and engineering analysis for the Airbus Deployable Recorder program, supporting design optimization and weight reduction.</li><li>Collaborated across engineering disciplines to develop high-reliability aerospace systems within demanding technical and operational constraints.</li></ul></div>
+        </div>
+        <template>Miniaturized satellite data unit components, contributing to a 25% reduction in size and weight.</template>
+      </details>
+      <details class="position">
+        <summary><span><strong>Mechanical Engineering Associate</strong><span class="employer">TECOMSYS</span></span><span class="year">Oct 2015 – Mar 2016</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">Oct 2015 – Mar 2016 · Clearwater, Florida, United States</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <p>Supported the design and development of specialized communications technology, focusing on mechanical engineering, component miniaturization, and human-centered product design.</p><ul><li>Defense Technology Development: Engineered a miniaturized handheld directional antenna system for specialized operational applications.</li><li>Mechanical Systems Design: Developed a compact mechanical architecture incorporating push-button deployment, automatically unfolding antenna elements, and an ergonomic pistol-grip chassis.</li><li>Human Factors Engineering: Integrated usability, portability, and operational requirements into mechanical design decisions to improve field functionality.</li><li>Engineering Innovation: Contributed to a design that increased operational efficiency by 40% through improved ergonomics and deployment functionality.</li></ul></div>
+        </div>
+        <template>Designed a handheld directional antenna that increased operational efficiency by 40%.</template>
+      </details>
+      <details class="position">
+        <summary><span><strong>Transportation Engineering Associate</strong><span class="employer">AECOM</span></span><span class="year">Feb 2013 – Oct 2015</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">Feb 2013 – Oct 2015 · Tampa, Florida, United States</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <p>Supported multidisciplinary civil and transportation engineering projects, applying analytical problem-solving, engineering design principles, and technical evaluation to infrastructure development and improvement initiatives.</p><ul><li>Infrastructure Engineering: Supported the analysis, design, and improvement of roadway infrastructure, drainage systems, and transportation structures.</li><li>Engineering Analysis &amp; Optimization: Evaluated existing infrastructure and developed design improvements addressing traffic flow, drainage performance, and flood risk.</li><li>Technical Compliance: Applied engineering standards, regulatory requirements, and design specifications to support safe, reliable infrastructure solutions.</li><li>Operational Improvement: Contributed to infrastructure improvements associated with increased traffic efficiency and reductions in flood risk of up to 20% in identified locations.</li></ul></div>
+        </div>
+        <template>Designed roadway and drainage improvements associated with up to 20% lower flood risk in identified locations.</template>
+      </details>
+      <details class="position">
+        <summary><span><strong>Learning Management Specialist</strong><span class="employer">Veterans Health Administration</span></span><span class="year">Jan 2011 – Nov 2012</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">Jan 2011 – Nov 2012 · Gainesville, Florida, United States</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <p>Supported healthcare technology modernization through enterprise learning systems development, workflow automation, and digital knowledge management.</p><ul><li>Enterprise Systems Development: Architected and developed SharePoint-based learning management and help desk ticketing systems to streamline healthcare training, technical support, and organizational knowledge sharing.</li><li>Workflow &amp; Process Improvement: Designed digital solutions to improve information accessibility, reduce administrative complexity, and support more efficient healthcare operations.</li><li>Technology Adoption &amp; Change Management: Developed targeted training programs and facilitated stakeholder engagement to accelerate adoption of enterprise technology solutions.</li><li>Organizational Performance: Created technical learning resources and user engagement strategies that contributed to a 45% improvement in user engagement and satisfaction.</li></ul></div>
+        </div>
+        <template>Built SharePoint learning and help desk systems and helped improve user engagement and satisfaction by 45%.</template>
+      </details>
+      <details class="position">
+        <summary><span><strong>Navy EOD Technician</strong><span class="employer">US Navy</span></span><span class="year">May 2004 – Feb 2009</span></summary>
+        <div class="position-detail">
+          <p class="position-meta">May 2004 – Feb 2009</p>
+          <div class="position-preview" hidden></div>
+          <div class="position-full">          <p>Served as a U.S. Navy Explosive Ordnance Disposal Technician, conducting specialized operations requiring advanced technical proficiency, operational planning, multidisciplinary coordination, and rigorous risk management.</p><ul><li>Executed complex technical missions in high-risk operational environments, emphasizing precision, accountability, and mission readiness.</li><li>Completed two operational deployments to Bahrain supporting U.S. Navy EOD missions.</li><li>Coordinated technical operations requiring systematic problem-solving, risk assessment, and collaboration across operational disciplines.</li><li>Developed a foundation in disciplined systems thinking, operational reliability, technical leadership, and mission-focused execution.</li></ul></div>
+        </div>
+        <template>Conducted explosive ordnance disposal operations, including two deployments to Bahrain.</template>
+      </details>
+    </section>
+    <aside aria-label="Skills and credentials">
+      <section>
+        <h2>Technical skills</h2>
+        <ul id="technical-skills"></ul>
+      </section>
+      <section>
+        <h2>Certifications</h2>
+        <ul>
+          <li>AWS Certified Solutions Architect – Associate</li>
+          <li>AWS Certified Data Engineer – Associate</li>
+          <li>AWS Certified Cloud Practitioner</li>
+          <li>CompTIA Security+</li>
+          <li>Certified ScrumMaster</li>
+        </ul>
+      </section>
+      <section class="education">
+        <h2>Education</h2>
+        <p><strong>University of South Florida</strong></p>
+        <p>B.S. in Mechanical Engineering · August 2016 · GPA 3.4</p>
+      </section>
+    </aside>
+  </div>
+  <details class="skills-inventory">
+    <summary>Full LinkedIn skills list (78)</summary>
+    <ul><li>Engineering Innovation</li><li>Mechanical Systems</li><li>Defense Technology</li><li>Human Factors Engineering</li><li>Civil Engineering</li><li>Problem Solving</li><li>Infrastructure</li><li>Learning Management Systems</li><li>Enterprise Software Development</li><li>Technical Operations</li><li>Systems Thinking</li><li>Team Leadership</li><li>Deployment Planning</li><li>Engineering Design</li><li>Regulatory Compliance</li><li>Risk Management</li><li>Product Development</li><li>Systems Design</li><li>Engineering Analysis</li><li>Mechanical Engineering</li><li>Engineering Knowledge Management</li><li>Change Management</li><li>Technical Enablement</li><li>3DEXPERIENCE</li><li>AI-Assisted Content Development</li><li>Enterprise Digital Transformation</li><li>Technical Product Management</li><li>Kanban</li><li>Automation Anywhere</li><li>Microsoft Power Platform</li><li>Secure Development Environments</li><li>Software Verification &amp; Validation</li><li>Test Automation</li><li>Systems Integration</li><li>Aerospace Engineering</li><li>Technical Leadership</li><li>Simulink</li><li>MATLAB</li><li>LabVIEW</li><li>Workforce Analysis</li><li>Process Improvement Projects</li><li>Knowledge Management</li><li>Workflow Automation</li><li>Digital Transformation</li><li>Systems Engineering</li><li>SharePoint Designer</li><li>AWS Lambda</li><li>GovCloud</li><li>AWS Step Functions</li><li>Cloud Services</li><li>PostgreSQL</li><li>Amazon S3</li><li>AWS CloudFormation</li><li>User Stories</li><li>Software Product Management</li><li>AWS Glue</li><li>Infrastructure as code (IaC)</li><li>Python (Programming Language)</li><li>AWS Identity and Access Management (AWS IAM)</li><li>Cloud Infrastructure</li><li>AI-Assisted Software Engineering</li><li>DevOps</li><li>Integrated Systems</li><li>Solution Architecture</li><li>Git</li><li>AWS SageMaker</li><li>Claude Sonnet 4.5</li><li>Mermaid</li><li>Markdown</li><li>Microsoft Visual Studio Code</li><li>Data Engineering</li><li>Cloud-Native Architecture</li><li>Amazon Web Services (AWS)</li><li>Azure DevOps</li><li>Agile Project Management</li><li>Scrum</li><li>SharePoint</li><li>Electromechanics</li></ul>
+  </details>
+</main>
+<div class="print-resume"></div>
+<script>
+  const picker = document.getElementById('length');
+  const printResume = document.querySelector('.print-resume');
+  const positions = [...document.querySelectorAll('.position')];
+  const sheet = document.querySelector('.sheet');
+  const profile = sheet.querySelector('header');
+  const editionNote = document.getElementById('edition-note');
+
+  const skillsByLength = {
+    1: [
+      'AWS GovCloud, serverless ETL, and CloudFormation IaC',
+      'Agentic AI, Python, PowerShell, and TypeScript',
+      'GitHub Actions, GitLab, and offline-first applications',
+    ],
+    2: [
+      'Cloud and security · AWS GovCloud, Lambda, Step Functions, Glue, S3, CloudFormation, IAM, KMS, Secrets Manager',
+      'Languages and web · Python, Windows PowerShell 5.1, C#/.NET, TypeScript, React',
+      'DevOps and testing · GitHub Actions, self-hosted runners, GitLab, Azure DevOps, Pester',
+      'Local applications and data · Offline-first browser apps, REST APIs, PostgreSQL, and SQLite',
+      'Applied AI and delivery · Agentic workflows, Power Platform, SharePoint, and agile product ownership',
+    ],
+    3: [
+      'Cloud and security · AWS GovCloud, Lambda, Step Functions, Glue, S3, CloudFormation, SageMaker, least-privilege IAM, KMS, Secrets Manager',
+      'Software engineering · Python, Windows PowerShell 5.1, C#/.NET, TypeScript, React, HTML/CSS, Linux, Bash',
+      'CI/CD and testing · GitHub Actions, reusable workflows, self-hosted runners, GitLab, Azure DevOps, Pester',
+      'Local-first architecture · Offline browser apps, IndexedDB, service workers, Web Workers, and Web Crypto',
+      'Developer tooling · CLI design, loopback REST APIs, JSON Schema, and conformance testing',
+      'Data engineering · Event-driven ETL, PostgreSQL, SQLite, CSV, Parquet, and Arrow',
+      'Applied AI and delivery · Agentic workflows, Ollama, Power Platform, SharePoint, Scrum, and Kanban',
+      'Systems engineering · MATLAB, Simulink, LabVIEW, integration, and software verification and validation',
+    ],
+  };
+
+  const standardHighlights = [
+    'Build agentic AI for software development intelligence, agile product management, and operational decision support.',
+    'Built reusable infrastructure as code and Python automation, and secured the platform with network isolation, least-privilege IAM, KMS, and Secrets Manager.',
+    'Owned the product backlog, facilitated Agile ceremonies, and evaluated on-premises and cloud-hosted Azure DevOps.',
+    'Designed interactive simulations and used synthetic narration to accelerate technical content production.',
+    'Built mobile test equipment with PXI instrumentation and supported LabVIEW verification and deployment.',
+    'Improved team performance by 15% through competency analysis and cut new-engineer ramp-up time by 50% with interactive training.',
+    'Developed design criteria and specifications for industrial fire protection systems.',
+    'Tested materials for the Airbus Deployable Recorder program to support design optimization and weight reduction.',
+    'Designed a push-button deployment mechanism with automatically unfolding antenna elements.',
+    'Evaluated roadway infrastructure for traffic flow, drainage performance, and regulatory compliance.',
+    'Developed training and worked with stakeholders to drive adoption of enterprise technology.',
+    'Coordinated high-risk technical operations with an emphasis on planning, risk assessment, and mission readiness.',
+  ];
+
+  function roleSummary(position, index, length) {
+    const summary = position.querySelector('template').content.textContent;
+    return length === 2 ? [summary, standardHighlights[index]] : [summary];
+  }
+
+  function highlightList(highlights) {
+    const list = document.createElement('ul');
+    highlights.forEach(line => {
+      const bullet = document.createElement('li');
+      bullet.textContent = line;
+      list.append(bullet);
+    });
+    return list;
+  }
+
+  function updateScreen() {
+    const length = Number(picker.value);
+    sheet.dataset.length = length;
+    document.getElementById('technical-skills').replaceChildren(...highlightList(skillsByLength[length]).children);
+    editionNote.textContent = {
+      1: 'Concise · A quick scan of all 12 roles, with highlights for the six most recent.',
+      2: 'Standard · Two selected highlights for every role.',
+      3: 'Detailed · Full experience descriptions and all 59 accomplishment bullets.',
+    }[length];
+
+    positions.forEach((position, index) => {
+      const details = position.querySelector('.position-full');
+      details.hidden = length !== 3;
+      const preview = position.querySelector('.position-preview');
+      preview.hidden = length === 3;
+      const titleOnly = length === 1 && index >= 6;
+      preview.replaceChildren();
+      if (length === 2) {
+        preview.append(highlightList(roleSummary(position, index, length)));
+      } else if (length === 1 && !titleOnly) {
+        preview.textContent = roleSummary(position, index, length)[0];
+      }
+      position.open = !titleOnly;
+      position.querySelector('.position-meta').hidden = length === 1;
+      position.querySelector('.position-detail').hidden = titleOnly;
+      position.querySelector('.year').hidden = length === 1;
+      position.classList.toggle('title-only', titleOnly);
+    });
+  }
+  const credentials = document.querySelector('.sheet aside');
+
+  const editions = {
+    1: [{title: 'Experience', from: 0, to: 12, credentials: true}],
+    2: [
+      {title: 'Recent experience', from: 0, to: 6},
+      {title: 'Earlier experience', from: 6, to: 12, credentials: true},
+    ],
+    3: [
+      {title: 'Cloud architecture and enterprise technology', from: 0, to: 3},
+      {title: 'Software, aerospace, and fire protection engineering', from: 3, to: 8},
+      {title: 'Earlier engineering, healthcare, and military experience', from: 8, to: 12, credentials: true},
+    ],
+  };
+
+  function buildPrintResume() {
+    const length = Number(picker.value);
+    printResume.replaceChildren();
+    editions[length].forEach((page, index) => {
+      const section = document.createElement('section');
+      section.className = 'print-page';
+      section.dataset.length = length;
+      if (index === 0) {
+        section.append(profile.cloneNode(true));
+      } else {
+        const heading = document.createElement('p');
+        heading.className = 'kicker';
+        heading.textContent = 'Anthony Hable / ' + (index + 1) + ' of ' + length;
+        section.append(heading);
+      }
+
+      const title = document.createElement('h2');
+      title.textContent = page.title;
+      section.append(title);
+      positions.slice(page.from, page.to).forEach((position, positionIndex) => {
+        const article = document.createElement('article');
+        const heading = document.createElement('h3');
+        const title = position.querySelector('strong').textContent;
+        const employer = position.querySelector('.employer').textContent;
+        const date = document.createElement('span');
+        date.className = 'print-date';
+        date.textContent = ' · ' + position.querySelector('.year').textContent;
+        heading.append(title + ' · ' + employer, date);
+        article.append(heading);
+
+        if (length === 3) {
+          const list = document.createElement('ul');
+          position.querySelectorAll('.position-full li').forEach(item => list.append(item.cloneNode(true)));
+          article.append(list);
+        } else if (length === 2 || positionIndex < 6) {
+          const summary = roleSummary(position, page.from + positionIndex, length);
+          if (length === 1) {
+            const description = document.createElement('p');
+            description.textContent = summary[0];
+            article.append(description);
+          } else {
+            article.append(highlightList(summary));
+          }
+        }
+        section.append(article);
+      });
+
+      if (page.credentials) {
+        const skills = credentials.cloneNode(true);
+        const list = highlightList(skillsByLength[length]);
+        skills.querySelector('#technical-skills').replaceWith(list);
+        if (length === 1) {
+          skills.querySelectorAll('ul').forEach(list => {
+            const line = document.createElement('p');
+            line.textContent = [...list.children].map(item => item.textContent).join(' · ');
+            list.replaceWith(line);
+          });
+        }
+        section.append(skills);
+      }
+      printResume.append(section);
+    });
+  }
+
+  picker.addEventListener('change', () => {
+    updateScreen();
+    buildPrintResume();
+  });
+  positions.forEach(position => {
+    position.querySelector('summary').addEventListener('click', event => {
+      if (position.classList.contains('title-only')) event.preventDefault();
+    });
+  });
+  updateScreen();
+  window.addEventListener('beforeprint', buildPrintResume);
+  document.getElementById('export').addEventListener('click', () => window.print());
+  buildPrintResume();
+</script>
+<script>
+(() => {
+  const html = document.documentElement, body = document.body;
+  if (!html.classList.contains('boot')) return;
+  const cv = document.createElement('canvas');
+  const cleanup = () => { cv.remove(); html.style.overflow = ''; body.classList.remove('intro'); html.classList.remove('boot'); };
+  try {
+    scrollTo(0, 0); html.style.overflow = 'hidden';
+    const GLY = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン0123456789Z=*+<>:';
+    cv.id = 'rain-intro'; body.append(cv);
+    const x = cv.getContext('2d'), COL = 14, TRAIL = 16;
+    let W = innerWidth, H = innerHeight;
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    const fit = () => { W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0); };
+    fit(); addEventListener('resize', fit);
+    body.classList.add('intro'); html.classList.remove('boot');            // text goes transparent: the canvas is the page until the reveal
+
+    // every visible character of the sheet: where it sits and what it looks like
+    const chars = [], range = document.createRange();
+    const walker = document.createTreeWalker(document.querySelector('.sheet'), NodeFilter.SHOW_TEXT);
+    for (let node; (node = walker.nextNode());) {
+      const parent = node.parentElement, text = node.nodeValue;
+      if (!text.trim() || parent.closest('.skills-inventory, [hidden]')) continue;
+      const cs = getComputedStyle(parent);
+      if (cs.display === 'none') continue;
+      const font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`, up = cs.textTransform === 'uppercase';
+      for (let i = 0; i < text.length; i++) {
+        if (!text[i].trim()) continue;
+        range.setStart(node, i); range.setEnd(node, i + 1);
+        const r = range.getBoundingClientRect();
+        if (!r.width || r.top > H || r.bottom < 0) continue;
+        chars.push({ch: up ? text[i].toUpperCase() : text[i], font, cx: r.left + r.width / 2, cy: r.top + r.height / 2, at: 0});
+      }
+    }
+    // each rain column falls at its own pace; a character is built when its column's head passes it
+    const cols = Array.from({length: Math.ceil(W / COL)}, () => ({speed: 230 + Math.random() * 150, delay: Math.random() * 1.6}));
+    const colOf = c => cols[Math.min(cols.length - 1, Math.floor(c.cx / COL))];
+    let doneAt = 3;
+    for (const c of chars) { const k = colOf(c); doneAt = Math.max(doneAt, k.delay + (c.cy + 20) / k.speed); }
+    doneAt += 0.8;
+
+    const t0 = performance.now(); let ended = false;
+    function reveal() {
+      body.classList.remove('intro');                                       // black to paper, transparent to ink
+      cv.style.opacity = '0';                                              // while the green thins out
+      setTimeout(cleanup, 2200);
+    }
+    function frame(now) {
+      if (!cv.isConnected) return;
+      const t = (now - t0) / 1000;
+      x.clearRect(0, 0, W, H);
+      x.textBaseline = 'middle'; x.textAlign = 'center'; x.font = '15px "Courier New",monospace';
+      cols.forEach((c, i) => {
+        const head = (t - c.delay) * c.speed;
+        if (head < -20 || head > H + TRAIL * 18) return;
+        for (let k = 0; k < TRAIL; k++) {
+          const y = head - k * 18;
+          if (y < -10 || y > H + 10) continue;
+          x.fillStyle = k === 0 ? '#e8ffe8' : `rgba(57,255,122,${(1 - k / TRAIL) * 0.75})`;
+          x.fillText(GLY[(i * 7 + k * 13 + Math.floor(t * 9 + k)) % GLY.length], i * COL + COL / 2, y);
+        }
+      });
+      for (const c of chars) {                                              // what the rain has passed stays: white-hot, then green
+        if ((t - colOf(c).delay) * colOf(c).speed < c.cy) continue;
+        if (!c.at) c.at = t;
+        const a = Math.min(1, (t - c.at) / 0.5);
+        x.font = c.font;
+        x.fillStyle = a < 1 ? `rgb(${Math.round(232 - 175 * a)},255,${Math.round(238 - 116 * a)})` : '#39ff7a';
+        x.fillText(c.ch, c.cx, c.cy);
+      }
+      if (!ended && t > doneAt) { ended = true; reveal(); }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  } catch (e) { cleanup(); }
+})();
+</script>
+</body>
+</html>
