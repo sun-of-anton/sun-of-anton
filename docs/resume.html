@@ -538,6 +538,7 @@ body{transition:background-color 1.4s}
 
     // the paper front: sits just above the topmost character the rain hasn't built yet, so a section turns to ink on paper
     // only once it is complete. Green fades out across the same band the paper fades in.
+    const firstY = chars.reduce((m, c) => Math.min(m, c.cy), Infinity);        // the top line (the AI SYSTEMS kicker)
     let front = -100, last = performance.now(), ended = false;
     const keep = y => Math.min(1, Math.max(0, (y - (front - 60)) / 90));      // 0 above the front (paper), 1 below it (still rain)
     function finish() {
@@ -580,7 +581,7 @@ body{transition:background-color 1.4s}
         x.fillText(c.ch, c.cx, c.cy);
       }
       x.globalAlpha = 1;
-      const target = blocked === Infinity ? H + 140 : blocked - 40;
+      const target = blocked === Infinity ? H + 140 : blocked <= firstY + 6 ? -100 : blocked - 40;   // stay black until the first line is fully built
       if (target > front) front = Math.min(target, front + 700 * dt);       // moves down only, never faster than 700px/s
       html.style.setProperty('--front', front + 'px');
       if (!ended && front >= H + 100) { ended = true; finish(); }
