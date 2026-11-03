@@ -531,11 +531,15 @@ body{transition:background-color 1.8s}
       }
     }
     // each rain column falls at its own pace; a character is built when its column's head passes it
-    const cols = Array.from({length: Math.ceil(W / COL)}, () => ({speed: 230 + Math.random() * 150, delay: Math.random() * 1.6}));
+    const BUILD = 8;                                                        // seconds until the slowest column has built its last character
+    const cols = Array.from({length: Math.ceil(W / COL)}, () => {
+      const delay = Math.random() * 3.2, floor = (H + 40) / (BUILD - delay);   // slow columns still have to finish inside BUILD
+      return {delay, speed: Math.max(floor, 120 + Math.random() * 280)};       // wide spread: some streams crawl, some race
+    });
     const colOf = c => cols[Math.min(cols.length - 1, Math.floor(c.cx / COL))];
-    let doneAt = 3;
+    let doneAt = 6;
     for (const c of chars) { const k = colOf(c); doneAt = Math.max(doneAt, k.delay + (c.cy + 20) / k.speed); }
-    doneAt += 0.8;
+    doneAt += 1;                                                            // a beat with the finished green page before it fades
 
     const t0 = performance.now(); let ended = false;
     function reveal() {
@@ -543,6 +547,9 @@ body{transition:background-color 1.8s}
       cv.style.opacity = '0';                                              // while the green thins out
       setTimeout(cleanup, 2200);
     }
+    const skipIntro = () => { if (!ended) { ended = true; reveal(); } };     // any click, tap or key jumps to the finished page
+    addEventListener('pointerdown', skipIntro, {once: true});
+    addEventListener('keydown', skipIntro, {once: true});
     function frame(now) {
       if (!cv.isConnected) return;
       const t = (now - t0) / 1000;
