@@ -186,3 +186,5 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 </details>
 
 <picture><img src="https://capsule-render.vercel.app/api?type=waving&color=0:2c5364,50:203a43,100:0f2027&height=100&section=footer" width="100%" alt="footer"/></picture>
+
+<p align="center"><sub>© 2026 Anthony Hable. All rights reserved.</sub></p>
