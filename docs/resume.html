@@ -130,16 +130,15 @@ select{font:inherit;padding:6px;border-radius:4px;background:#f8faf6;color:#1728
   .print-page[data-length="3"] aside ul{line-height:1.15}
 }
 /* red-pill entrance (?enter=1): green rain builds the page character by character, then the green fades to ink on paper */
-.boot body{background:#000}
-.boot .sheet,.boot .toolbar,.boot .edition-note{visibility:hidden}
+/* .boot (set in the head before first paint) and .intro (while the rain builds) share one black start state, so nothing ever fades from the paper version */
+.boot body,body.intro{background:#000}
+.boot .toolbar,.boot .edition-note,.intro .toolbar,.intro .edition-note{opacity:0}
+.boot .sheet,.intro .sheet{background:#000;border-top-color:#145c2a}
+.boot .sheet,.boot .sheet *,.intro .sheet,.intro .sheet *{color:transparent !important;border-color:#145c2a !important}
+.boot .position summary::after,.intro .position summary::after{color:transparent}
 body{transition:background-color 1.8s}
 .sheet,.sheet *{transition:color 1.8s,background-color 1.8s,border-color 1.8s}
 .toolbar,.edition-note{transition:opacity 1.6s}
-body.intro{background:#000}
-.intro .toolbar,.intro .edition-note{opacity:0}
-.intro .sheet{background:#000;border-top-color:#145c2a}
-.intro .sheet,.intro .sheet *{color:transparent !important;border-color:#145c2a !important}
-.intro .position summary::after{color:transparent}
 #rain-intro{position:fixed;inset:0;width:100%;height:100%;z-index:50;pointer-events:none;transition:opacity 1.8s}
 @media print{#rain-intro{display:none}}
 </style>
