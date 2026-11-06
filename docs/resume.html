@@ -48,6 +48,7 @@ select{font:inherit;padding:6px;border-radius:4px;background:#f8faf6;color:#1728
 .print-resume{display:none}
 @media(max-width:640px){.toolbar{align-items:flex-start;flex-direction:column}}
 @page{size:letter;margin:.45in}
+@page detailed{size:letter;margin:.2in .45in}
 @media print{
   body{background:white;font-size:11pt;line-height:1.4}
   .toolbar,.edition-note,.sheet{display:none}
@@ -60,8 +61,13 @@ select{font:inherit;padding:6px;border-radius:4px;background:#f8faf6;color:#1728
   .print-page h2{margin-top:18px}
   .print-page h3{font-size:11pt}
   .print-page article{margin-bottom:14px;break-inside:avoid}
+  .print-page[data-length="3"]{page:detailed}
+  .print-page[data-length="3"] article{margin-bottom:4px}
+  .print-page[data-length="3"] h2{margin-top:8px;margin-bottom:5px}
   .print-page article p{margin:4px 0}
+  .print-page[data-length="3"] article p{margin:1px 0}
   .print-page article ul{font-size:10.5pt}
+  .print-page[data-length="3"] li{font-size:8.75pt;line-height:1.14}
   .print-page .year{margin-right:8px}
   .print-page[data-length="1"]{font-size:9.5pt}
   .print-page[data-length="1"] article{margin-bottom:7px}
@@ -84,7 +90,8 @@ select{font:inherit;padding:6px;border-radius:4px;background:#f8faf6;color:#1728
   .print-page[data-length="1"] aside section+section{margin-top:0}
   .print-page[data-length="3"] article ul{font-size:9pt;line-height:1.28}
   .print-page[data-length="3"] article li+li{margin-top:3px}
-  .print-page[data-length="3"] article{margin-bottom:8px}
+  .print-page[data-length="3"]{page:detailed}
+  .print-page[data-length="3"] article{margin-bottom:4px}
   .print-page[data-length="3"] h1{font-size:34pt}
   .print-page[data-length="3"] aside ul{font-size:9pt}
   .print-page[data-length="3"] aside section+section{margin-top:12px}
@@ -176,9 +183,9 @@ body{transition:background-color 1.4s}
         <div class="position-detail">
           <p class="position-meta">Sep 2026 – Present · Norfolk, Virginia, United States</p>
           <div class="position-preview" hidden></div>
-          <div class="position-full">          <ul><li>Design and develop AWS-based infrastructure and enterprise software solutions supporting federal operational requirements.</li><li>Architect and develop applications for restricted computing environments, accounting for approved technologies, local execution requirements, authentication controls, and limited external connectivity.</li><li>Apply AI-assisted software engineering techniques to accelerate application development, architectural analysis, troubleshooting, and workflow automation.</li><li>Design agentic AI systems for software development intelligence, autonomous agile product management, and operational decision support.</li><li>Develop intelligent applications supporting enterprise productivity, developer workflows, workforce capability analysis, and knowledge management.</li><li>Evaluate emerging technologies and architectural approaches for improving software delivery within constrained enterprise environments.</li></ul></div>
+          <div class="position-full">          <ul><li>Design and develop AWS-based infrastructure and enterprise software solutions supporting federal operational requirements.</li><li>Architect and develop applications for restricted computing environments, accounting for approved technologies, local execution requirements, authentication controls, and limited external connectivity.</li><li>Apply AI-assisted software engineering techniques to accelerate application development, architectural analysis, troubleshooting, and workflow automation.</li><li>Design agentic AI systems for software development intelligence, autonomous agile product management, and operational decision support.</li><li>Develop intelligent applications supporting enterprise productivity, developer workflows, workforce capability analysis, and knowledge management.</li><li>Evaluate emerging technologies and architectural approaches for improving software delivery within constrained enterprise environments.</li><li>FleetHacker 2026: Built 12 of the 17 tools in a Navy-focused suite and contributed code to all 17, authoring about 1,670 commits across 20 repositories in about two weeks. The tools run on locked-down workstations with no admin rights or installs and were tested on Nautilus devices with CAC authentication on NMCI.</li><li>Semaphore: Created a no-license dashboard builder aimed at everyday Qlik workflows, with SQL generation for four database dialects, plain-English chart drafting, an automated suite of 275 tests, and a leadership view that labels each answer reviewed, drafted, or can&#x27;t answer yet.</li><li>Lazarette: Built an encrypted credential vault with AES-256 encryption, authenticator-app 2FA, version history, and signed updates, plus a Rust and WebAssembly engine that fills XFA forms such as the DD 2875. It serves as the secrets source for the suite.</li><li>Halyard: Built an agile backlog tool that audits GitHub work against a definition of ready, drafts fixes for human approval with diffs and rollback, and feeds sprint planning and delivery metrics.</li><li>PacketRat and Eight Bells: Built human-reviewed Outlook triage and watch-log review with source-cited reports and turnovers, each backed by a tamper-evident log.</li><li>Fairlead and Windlass: Built a local model router with fallback from cloud to local models, and an engine that runs large language models on ordinary PCs with custom CPU kernels.</li><li>Capstan, Shellback, SnapShackle, Scrimshaw, and Bowerbird: Built local-first tools for video editing, workforce skills, screenshot redaction, SCORM e-learning, and file intelligence. Also modernized the UI of a teammate&#x27;s tool, Gangplank, and added an intelligence layer.</li></ul></div>
         </div>
-        <template>Design AWS infrastructure and agentic AI applications for restricted federal environments.</template>
+        <template>Design AWS infrastructure and agentic AI for restricted federal environments; built 12 of 17 tools in the FleetHacker 2026 Navy suite.</template>
       </details>
       <details class="position">
         <summary><span><strong>AWS Solutions Architect [T4]</strong><span class="employer">CACI International Inc</span></span><span class="year">Dec 2025 – Sep 2026</span></summary>
@@ -324,25 +331,25 @@ body{transition:background-color 1.4s}
     ],
     2: [
       'Cloud and security · AWS GovCloud, Lambda, Step Functions, Glue, S3, CloudFormation, IAM, KMS, Secrets Manager',
-      'Languages and web · Python, Windows PowerShell 5.1, C#/.NET, TypeScript, React',
+      'Languages and web · Python, Windows PowerShell 5.1, C#/.NET, TypeScript, React, Rust/WebAssembly',
       'DevOps and testing · GitHub Actions, self-hosted runners, GitLab, Azure DevOps, Pester',
       'Local applications and data · Offline-first browser apps, REST APIs, PostgreSQL, and SQLite',
       'Applied AI and delivery · Agentic workflows, Power Platform, SharePoint, and agile product ownership',
     ],
     3: [
       'Cloud and security · AWS GovCloud, Lambda, Step Functions, Glue, S3, CloudFormation, SageMaker, least-privilege IAM, KMS, Secrets Manager',
-      'Software engineering · Python, Windows PowerShell 5.1, C#/.NET, TypeScript, React, HTML/CSS, Linux, Bash',
+      'Software engineering · Python, Windows PowerShell 5.1, C#/.NET, TypeScript, React, Svelte, Rust/WebAssembly, HTML/CSS, Linux, Bash',
       'CI/CD and testing · GitHub Actions, reusable workflows, self-hosted runners, GitLab, Azure DevOps, Pester',
       'Local-first architecture · Offline browser apps, IndexedDB, service workers, Web Workers, and Web Crypto',
       'Developer tooling · CLI design, loopback REST APIs, JSON Schema, and conformance testing',
       'Data engineering · Event-driven ETL, PostgreSQL, SQLite, CSV, Parquet, and Arrow',
-      'Applied AI and delivery · Agentic workflows, Ollama, Power Platform, SharePoint, Scrum, and Kanban',
+      'Applied AI and delivery · Agentic workflows, local model routing, Ollama, Power Platform, SharePoint, Scrum, and Kanban',
       'Systems engineering · MATLAB, Simulink, LabVIEW, integration, and software verification and validation',
     ],
   };
 
   const standardHighlights = [
-    'Build agentic AI for software development intelligence, agile product management, and operational decision support.',
+    'Created Semaphore, a no-license dashboard builder, and Lazarette, an encrypted credential vault, for locked-down workstations, tested on Nautilus with CAC on NMCI.',
     'Built reusable infrastructure as code and Python automation, and secured the platform with network isolation, least-privilege IAM, KMS, and Secrets Manager.',
     'Owned the product backlog, facilitated Agile ceremonies, and evaluated on-premises and cloud-hosted Azure DevOps.',
     'Designed interactive simulations and used synthetic narration to accelerate technical content production.',
@@ -378,7 +385,7 @@ body{transition:background-color 1.4s}
     editionNote.textContent = {
       1: 'Concise · A quick scan of all 12 roles, with highlights for the six most recent.',
       2: 'Standard · Two selected highlights for every role.',
-      3: 'Detailed · Full experience descriptions and all 59 accomplishment bullets.',
+      3: 'Detailed · Full experience descriptions and all 66 accomplishment bullets.',
     }[length];
 
     positions.forEach((position, index) => {
@@ -409,9 +416,9 @@ body{transition:background-color 1.4s}
       {title: 'Earlier experience', from: 6, to: 12, credentials: true},
     ],
     3: [
-      {title: 'Cloud architecture and enterprise technology', from: 0, to: 3},
-      {title: 'Software, aerospace, and fire protection engineering', from: 3, to: 8},
-      {title: 'Earlier engineering, healthcare, and military experience', from: 8, to: 12, credentials: true},
+      {title: 'Cloud architecture and enterprise technology', from: 0, to: 2},
+      {title: 'Software, aerospace, and fire protection engineering', from: 2, to: 7},
+      {title: 'Earlier engineering, healthcare, and military experience', from: 7, to: 12, credentials: true},
     ],
   };
 
