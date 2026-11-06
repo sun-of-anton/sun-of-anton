@@ -48,7 +48,6 @@ select{font:inherit;padding:6px;border-radius:4px;background:#f8faf6;color:#1728
 .print-resume{display:none}
 @media(max-width:640px){.toolbar{align-items:flex-start;flex-direction:column}}
 @page{size:letter;margin:.45in}
-@page detailed{size:letter;margin:.2in .45in}
 @media print{
   body{background:white;font-size:11pt;line-height:1.4}
   .toolbar,.edition-note,.sheet{display:none}
@@ -61,13 +60,8 @@ select{font:inherit;padding:6px;border-radius:4px;background:#f8faf6;color:#1728
   .print-page h2{margin-top:18px}
   .print-page h3{font-size:11pt}
   .print-page article{margin-bottom:14px;break-inside:avoid}
-  .print-page[data-length="3"]{page:detailed}
-  .print-page[data-length="3"] article{margin-bottom:4px}
-  .print-page[data-length="3"] h2{margin-top:8px;margin-bottom:5px}
   .print-page article p{margin:4px 0}
-  .print-page[data-length="3"] article p{margin:1px 0}
   .print-page article ul{font-size:10.5pt}
-  .print-page[data-length="3"] li{font-size:8.75pt;line-height:1.14}
   .print-page .year{margin-right:8px}
   .print-page[data-length="1"]{font-size:9.5pt}
   .print-page[data-length="1"] article{margin-bottom:7px}
@@ -88,53 +82,72 @@ select{font:inherit;padding:6px;border-radius:4px;background:#f8faf6;color:#1728
   .print-page[data-length="1"] article{margin-bottom:5px}
   .print-page[data-length="1"] .print-date{display:none}
   .print-page[data-length="1"] aside section+section{margin-top:0}
-  .print-page[data-length="3"] article ul{font-size:9pt;line-height:1.28}
-  .print-page[data-length="3"] article li+li{margin-top:3px}
-  .print-page[data-length="3"]{page:detailed}
-  .print-page[data-length="3"] article{margin-bottom:4px}
-  .print-page[data-length="3"] h1{font-size:34pt}
-  .print-page[data-length="3"] aside ul{font-size:9pt}
-  .print-page[data-length="3"] aside section+section{margin-top:12px}
   .print-date{font:normal 9pt system-ui;color:var(--soft)}
 }
 .edition-note{max-width:932px;margin:0 auto 12px;padding:0 4px;color:#dceee3;font-size:.9rem}
 @media(max-width:980px){.edition-note{padding-inline:16px}}
 .position-preview[hidden],.position-full[hidden]{display:none}
 @media print{
-   .print-page[data-length="2"] article{margin-bottom:9px}
-  .print-page[data-length="2"] article ul{font-size:10pt;line-height:1.27}
-  .print-page[data-length="2"] aside ul{font-size:9pt;line-height:1.25}
-  .print-page[data-length="2"] aside section+section{margin-top:12px}
+  .print-page[data-length="3"] article ul{font-size:9pt;line-height:1.28}
+  .print-page[data-length="3"] article li+li{margin-top:3px}
+  .print-page[data-length="3"] article{margin-bottom:8px}
+  .print-page[data-length="3"] h1{font-size:34pt}
+  .print-page[data-length="3"] aside ul{font-size:9pt}
+  .print-page[data-length="3"] aside section+section{margin-top:12px}
   .print-page[data-length="3"] article ul{font-size:9pt;line-height:1.15}
   .print-page[data-length="3"] article li+li{margin-top:2px}
   .print-page[data-length="3"] article{margin-bottom:7px}
   .print-page[data-length="3"] h2{margin-top:12px;margin-bottom:7px}
-}
-.position.title-only summary{cursor:default}
-.position.title-only summary::after{content:none}
-@media print{
   .print-page[data-length="3"] aside{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .print-page[data-length="3"] aside section+section{margin:0}
   .print-page[data-length="3"] aside ul{line-height:1.25}
   .print-page[data-length="3"] .summary{margin-top:8px}
-}
-@media print{
   .print-page[data-length="3"] aside{display:block}
   .print-page[data-length="3"] aside ul{columns:2;column-gap:20px}
   .print-page[data-length="3"] aside li{break-inside:avoid;margin:0 0 3px}
   .print-page[data-length="3"] aside section+section{margin-top:6px}
+  .print-page[data-length="3"] aside h2{margin-top:6px;padding-top:5px;margin-bottom:4px}
+  .print-page[data-length="3"] aside ul{line-height:1.15}
+  .print-page[data-length="4"] article ul{font-size:9pt;line-height:1.28}
+  .print-page[data-length="4"] article li+li{margin-top:3px}
+  .print-page[data-length="4"] article{margin-bottom:8px}
+  .print-page[data-length="4"] h1{font-size:34pt}
+  .print-page[data-length="4"] aside ul{font-size:9pt}
+  .print-page[data-length="4"] aside section+section{margin-top:12px}
+  .print-page[data-length="4"] article ul{font-size:9pt;line-height:1.15}
+  .print-page[data-length="4"] article li+li{margin-top:2px}
+  .print-page[data-length="4"] article{margin-bottom:7px}
+  .print-page[data-length="4"] h2{margin-top:12px;margin-bottom:7px}
+  .print-page[data-length="4"] aside{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .print-page[data-length="4"] aside section+section{margin:0}
+  .print-page[data-length="4"] aside ul{line-height:1.25}
+  .print-page[data-length="4"] .summary{margin-top:8px}
+  .print-page[data-length="4"] aside{display:block}
+  .print-page[data-length="4"] aside ul{columns:2;column-gap:20px}
+  .print-page[data-length="4"] aside li{break-inside:avoid;margin:0 0 3px}
+  .print-page[data-length="4"] aside section+section{margin-top:6px}
+  .print-page[data-length="4"] aside h2{margin-top:6px;padding-top:5px;margin-bottom:4px}
+  .print-page[data-length="4"] aside ul{line-height:1.15}
+   .print-page[data-length="2"] article{margin-bottom:9px}
+  .print-page[data-length="2"] article ul{font-size:10pt;line-height:1.27}
+  .print-page[data-length="2"] aside ul{font-size:9pt;line-height:1.25}
+  .print-page[data-length="2"] aside section+section{margin-top:12px}
+}
+.position.title-only summary{cursor:default}
+.position.title-only summary::after{content:none}
+@media print{
+}
+@media print{
 }
 .skills-inventory{margin-top:28px;padding-top:12px;border-top:1px solid var(--line)}
 .skills-inventory summary{cursor:pointer;color:var(--green);font-weight:700}
 .skills-inventory ul{columns:3;column-gap:24px;margin-top:10px}
 .skills-inventory li{break-inside:avoid}
-.sheet:not([data-length="3"]) .skills-inventory{display:none}
+.sheet:not([data-length="4"]) .skills-inventory{display:none}
 @media(max-width:640px){.skills-inventory ul{columns:2}}
 @media print{
   .print-page .education p{display:inline}
   .print-page .education p+p::before{content:" · "}
-  .print-page[data-length="3"] aside h2{margin-top:6px;padding-top:5px;margin-bottom:4px}
-  .print-page[data-length="3"] aside ul{line-height:1.15}
 }
 /* red-pill entrance (?enter=1): the rain builds the page and a paper-white front follows it down the screen */
 .boot body,body.intro{background:#000}
@@ -155,13 +168,14 @@ body{transition:background-color 1.4s}
     <select id="length">
       <option value="1">1 page · concise</option>
       <option value="2">2 pages · standard</option>
-      <option value="3" selected>3 pages · detailed</option>
+      <option value="3">3 pages · detailed</option>
+      <option value="4" selected>4 pages · complete</option>
     </select>
     <button id="export" type="button">Save as PDF</button>
   </div>
 </nav>
 <p class="edition-note" id="edition-note" role="status"></p>
-<main class="sheet" data-length="3">
+<main class="sheet" data-length="4">
   <header>
     <div class="kicker">AI systems · Cloud architecture</div>
     <h1>Anthony Hable</h1>
@@ -183,9 +197,9 @@ body{transition:background-color 1.4s}
         <div class="position-detail">
           <p class="position-meta">Sep 2026 – Present · Norfolk, Virginia, United States</p>
           <div class="position-preview" hidden></div>
-          <div class="position-full">          <ul><li>Design and develop AWS-based infrastructure and enterprise software solutions supporting federal operational requirements.</li><li>Architect and develop applications for restricted computing environments, accounting for approved technologies, local execution requirements, authentication controls, and limited external connectivity.</li><li>Apply AI-assisted software engineering techniques to accelerate application development, architectural analysis, troubleshooting, and workflow automation.</li><li>Design agentic AI systems for software development intelligence, autonomous agile product management, and operational decision support.</li><li>Develop intelligent applications supporting enterprise productivity, developer workflows, workforce capability analysis, and knowledge management.</li><li>Evaluate emerging technologies and architectural approaches for improving software delivery within constrained enterprise environments.</li><li>FleetHacker 2026: Built 12 of the 17 tools in a Navy-focused suite and contributed code to all 17, authoring about 1,670 commits across 20 repositories in about two weeks. The tools run on locked-down workstations with no admin rights or installs and were tested on Nautilus devices with CAC authentication on NMCI.</li><li>Semaphore: Created a no-license dashboard builder aimed at everyday Qlik workflows, with SQL generation for four database dialects, plain-English chart drafting, an automated suite of 275 tests, and a leadership view that labels each answer reviewed, drafted, or can&#x27;t answer yet.</li><li>Lazarette: Built an encrypted credential vault with AES-256 encryption, authenticator-app 2FA, version history, and signed updates, plus a Rust and WebAssembly engine that fills XFA forms such as the DD 2875. It serves as the secrets source for the suite.</li><li>Halyard: Built an agile backlog tool that audits GitHub work against a definition of ready, drafts fixes for human approval with diffs and rollback, and feeds sprint planning and delivery metrics.</li><li>PacketRat and Eight Bells: Built human-reviewed Outlook triage and watch-log review with source-cited reports and turnovers, each backed by a tamper-evident log.</li><li>Fairlead and Windlass: Built a local model router with fallback from cloud to local models, and an engine that runs large language models on ordinary PCs with custom CPU kernels.</li><li>Capstan, Shellback, SnapShackle, Scrimshaw, and Bowerbird: Built local-first tools for video editing, workforce skills, screenshot redaction, SCORM e-learning, and file intelligence. Also modernized the UI of a teammate&#x27;s tool, Gangplank, and added an intelligence layer.</li></ul></div>
+          <div class="position-full">          <ul><li>Design and develop AWS-based infrastructure and enterprise software solutions supporting federal operational requirements.</li><li>Architect and develop applications for restricted computing environments, accounting for approved technologies, local execution requirements, authentication controls, and limited external connectivity.</li><li>Apply AI-assisted software engineering techniques to accelerate application development, architectural analysis, troubleshooting, and workflow automation.</li><li>Design agentic AI systems for software development intelligence, autonomous agile product management, and operational decision support.</li><li>Develop intelligent applications supporting enterprise productivity, developer workflows, workforce capability analysis, and knowledge management.</li><li>Evaluate emerging technologies and architectural approaches for improving software delivery within constrained enterprise environments.</li><li>FleetHacker 2026: Built 12 of the 17 tools in a Navy-focused suite and contributed code to all 17, authoring about 1,670 commits across 20 repositories in about two weeks.</li><li>Engineered tools that run on locked-down Navy workstations with no admin rights or installs, testing them on Nautilus devices with CAC authentication on NMCI.</li><li>Created Semaphore, a no-license dashboard builder aimed at everyday Qlik workflows, with SQL generation for four database dialects, plain-English chart drafting, an automated suite of 275 tests and a leadership view that labels each answer reviewed, drafted or can&#x27;t answer yet.</li><li>Built Lazarette, an encrypted credential vault for locked-down Windows workstations with no installs: AES-256 encryption, authenticator-app 2FA, per-item version history, encrypted attachments and backups, and signed updates.</li><li>Engineered a Rust and WebAssembly PDF engine for Lazarette that fills access-request forms in the browser, including dynamic XFA forms such as the DD 2875 (SAAR).</li><li>Made Lazarette the secrets source for the suite, so other tools read credentials by name through a shared integration instead of storing their own.</li><li>Built Halyard, which audits GitHub backlogs against a definition of ready, drafts fixes for human approval with diffs and rollback, and feeds sprint planning and leadership delivery metrics.</li><li>Built PacketRat, which turns an Outlook inbox into a human-reviewed action queue, with source-linked reports and a tamper-evident action log.</li><li>Built Fairlead, a local model router that picks a route per request and falls back to local models when the cloud is lost.</li><li>Built Windlass, which runs large language models on ordinary PCs, with custom CPU kernels and published speed and quality measurements.</li><li>Built Capstan, a browser-based screen recorder and video editor with multitrack editing, captions and MP4 export.</li><li>Built Shellback, a local-first skills app where employees attest their own skills, with résumé intake, team coverage views and aggregate-only supervisor summaries.</li><li>Built Eight Bells, which reviews watch log quality and drafts turnovers that cite their source lines, backed by a hash-chained audit log.</li><li>Built SnapShackle, a screenshot tool with annotation, sensitive-information redaction and text search inside images, all kept on the local machine.</li><li>Built Scrimshaw, an e-learning authoring tool with quizzes, triggers and variables that publishes SCORM 1.2 and 2004 packages.</li><li>Built Bowerbird, a local file intelligence tool with indexing, duplicate detection and approval-gated renames and moves with undo.</li><li>Modernized the UI and added an intelligence layer to Gangplank, a teammate&#x27;s browser-based GitHub and GitLab tool.</li></ul></div>
         </div>
-        <template>Design AWS infrastructure and agentic AI for restricted federal environments; built 12 of 17 tools in the FleetHacker 2026 Navy suite.</template>
+        <template>Built 12 of 17 Navy tools at FleetHacker 2026, including Semaphore dashboards and the Lazarette credential vault, tested on Nautilus with CAC on NMCI.</template>
       </details>
       <details class="position">
         <summary><span><strong>AWS Solutions Architect [T4]</strong><span class="employer">CACI International Inc</span></span><span class="year">Dec 2025 – Sep 2026</span></summary>
@@ -324,6 +338,7 @@ body{transition:background-color 1.4s}
   const editionNote = document.getElementById('edition-note');
 
   const skillsByLength = {
+    get 4() { return this[3]; },
     1: [
       'AWS GovCloud, serverless ETL, and CloudFormation IaC',
       'Agentic AI, Python, PowerShell, and TypeScript',
@@ -348,24 +363,21 @@ body{transition:background-color 1.4s}
     ],
   };
 
-  const standardHighlights = [
-    'Created Semaphore, a no-license dashboard builder, and Lazarette, an encrypted credential vault, for locked-down workstations, tested on Nautilus with CAC on NMCI.',
-    'Built reusable infrastructure as code and Python automation, and secured the platform with network isolation, least-privilege IAM, KMS, and Secrets Manager.',
-    'Owned the product backlog, facilitated Agile ceremonies, and evaluated on-premises and cloud-hosted Azure DevOps.',
-    'Designed interactive simulations and used synthetic narration to accelerate technical content production.',
-    'Built mobile test equipment with PXI instrumentation and supported LabVIEW verification and deployment.',
-    'Improved team performance by 15% through competency analysis and cut new-engineer ramp-up time by 50% with interactive training.',
-    'Developed design criteria and specifications for industrial fire protection systems.',
-    'Tested materials for the Airbus Deployable Recorder program to support design optimization and weight reduction.',
-    'Designed a push-button deployment mechanism with automatically unfolding antenna elements.',
-    'Evaluated roadway infrastructure for traffic flow, drainage performance, and regulatory compliance.',
-    'Developed training and worked with stakeholders to drive adoption of enterprise technology.',
-    'Coordinated high-risk technical operations with an emphasis on planning, risk assessment, and mission readiness.',
-  ];
+  // Best bullets per role, best first, as indexes into each role's full list.
+  const bestBullets = {
+    2: [[6, 8, 9, 12], [1, 4, 2], [1, 0], [4, 2], [1, 5], [2, 1], [1], [0], [3], [3], [3], [1]],
+    3: [[6, 8, 9, 10, 12, 7, 15, 14, 13, 3], [1, 0, 2, 4, 5], [1, 0, 3], [0, 2, 4, 3], [1, 2, 5, 0], [2, 1, 4, 0], [1, 0, 2], [0, 1, 2], [3, 1, 0, 2], [3, 1, 0], [3, 0, 1], [1, 0, 2]],
+  };
 
-  function roleSummary(position, index, length) {
-    const summary = position.querySelector('template').content.textContent;
-    return length === 2 ? [summary, standardHighlights[index]] : [summary];
+  function bestList(position, index, length) {
+    const all = position.querySelectorAll('.position-full li');
+    const list = document.createElement('ul');
+    bestBullets[length][index].forEach(i => list.append(all[i].cloneNode(true)));
+    return list;
+  }
+
+  function roleLine(position) {
+    return position.querySelector('template').content.textContent;
   }
 
   function highlightList(highlights) {
@@ -383,22 +395,23 @@ body{transition:background-color 1.4s}
     sheet.dataset.length = length;
     document.getElementById('technical-skills').replaceChildren(...highlightList(skillsByLength[length]).children);
     editionNote.textContent = {
-      1: 'Concise · A quick scan of all 12 roles, with highlights for the six most recent.',
-      2: 'Standard · Two selected highlights for every role.',
-      3: 'Detailed · Full experience descriptions and all 66 accomplishment bullets.',
+      1: 'Concise · A quick scan of all 12 roles, with the top result from the six most recent.',
+      2: 'Standard · The strongest bullets for each role.',
+      3: 'Detailed · The best bullets from every role.',
+      4: 'Complete · Full experience descriptions and all 76 accomplishment bullets.',
     }[length];
 
     positions.forEach((position, index) => {
       const details = position.querySelector('.position-full');
-      details.hidden = length !== 3;
+      details.hidden = length !== 4;
       const preview = position.querySelector('.position-preview');
-      preview.hidden = length === 3;
+      preview.hidden = length === 4;
       const titleOnly = length === 1 && index >= 6;
       preview.replaceChildren();
-      if (length === 2) {
-        preview.append(highlightList(roleSummary(position, index, length)));
+      if (length === 2 || length === 3) {
+        preview.append(bestList(position, index, length));
       } else if (length === 1 && !titleOnly) {
-        preview.textContent = roleSummary(position, index, length)[0];
+        preview.textContent = roleLine(position);
       }
       position.open = !titleOnly;
       position.querySelector('.position-meta').hidden = length === 1;
@@ -412,13 +425,19 @@ body{transition:background-color 1.4s}
   const editions = {
     1: [{title: 'Experience', from: 0, to: 12, credentials: true}],
     2: [
-      {title: 'Recent experience', from: 0, to: 6},
-      {title: 'Earlier experience', from: 6, to: 12, credentials: true},
+      {title: 'Recent experience', from: 0, to: 5},
+      {title: 'Earlier experience', from: 5, to: 12, credentials: true},
     ],
     3: [
-      {title: 'Cloud architecture and enterprise technology', from: 0, to: 2},
-      {title: 'Software, aerospace, and fire protection engineering', from: 2, to: 7},
-      {title: 'Earlier engineering, healthcare, and military experience', from: 7, to: 12, credentials: true},
+      {title: 'Cloud architecture and enterprise technology', from: 0, to: 3},
+      {title: 'Software, aerospace, and fire protection engineering', from: 3, to: 8},
+      {title: 'Earlier engineering, healthcare, and military experience', from: 8, to: 12, credentials: true},
+    ],
+    4: [
+      {title: 'AI systems and cloud architecture', from: 0, to: 1},
+      {title: 'Cloud architecture and enterprise technology', from: 1, to: 4},
+      {title: 'Software, aerospace, and fire protection engineering', from: 4, to: 8},
+      {title: 'Earlier engineering, healthcare, and military experience', from: 8, to: 12, credentials: true},
     ],
   };
 
@@ -452,19 +471,19 @@ body{transition:background-color 1.4s}
         heading.append(title + ' · ' + employer, date);
         article.append(heading);
 
-        if (length === 3) {
+        const roleIndex = page.from + positionIndex;
+        if (length === 4) {
           const list = document.createElement('ul');
           position.querySelectorAll('.position-full li').forEach(item => list.append(item.cloneNode(true)));
           article.append(list);
-        } else if (length === 2 || positionIndex < 6) {
-          const summary = roleSummary(position, page.from + positionIndex, length);
-          if (length === 1) {
+        } else if (length === 1) {
+          if (positionIndex < 6) {
             const description = document.createElement('p');
-            description.textContent = summary[0];
+            description.textContent = roleLine(position);
             article.append(description);
-          } else {
-            article.append(highlightList(summary));
           }
+        } else {
+          article.append(bestList(position, roleIndex, length));
         }
         section.append(article);
       });
