@@ -617,6 +617,7 @@
   <span class="hi">career</span>          the path he walked
   <span class="hi">skills</span>          load the training programs
   <span class="hi">certs</span>           the sparring program
+  <span class="hi">fleethacker</span>     the arsenal he shipped
   <span class="hi">find me</span>         get patched through
   <span class="hi">take pill</span>       red or blue · résumé or GitHub
   <span class="hi">speed</span> &lt;0.2–4&gt;     bend time
@@ -650,6 +651,7 @@
   ▸ designing agentic AI for software dev intelligence & autonomous agile PM
   ▸ architecting AWS infrastructure for restricted environments
   ▸ applying AI-assisted engineering to ship faster
+  ▸ building local-first tools that run where nothing else is allowed to
 `);
       await talk('MORPHEUS', 'The mission is real. The machines are just tools.');
       return null;
@@ -690,6 +692,32 @@
       await talk('ANTHONY', 'I know AWS.');
       await talk('MORPHEUS', 'Show me.');
       print(`<span class="dim">(type </span><span class="hi">certs</span><span class="dim">)</span>`);
+      return null;
+    },
+
+    fleethacker: async () => {
+      await narrate('the armory. racks of tools stretch out in every direction.');
+      await talk('TANK', 'FleetHacker 2026. 17 tools for the Fleet. He built 12 of them.');
+      const tools = [
+        ['semaphore.exe  ', 'no-license dashboards · SQL for four dialects · 275 tests'],
+        ['lazarette.exe  ', 'encrypted vault · 2FA · Rust/WASM engine that fills the DD 2875'],
+        ['halyard.exe    ', 'audits the backlog · drafts fixes · a human approves'],
+        ['packetrat.exe  ', 'Outlook into a human-reviewed action queue'],
+        ['eightbells.exe ', 'watch-log review · source-cited turnovers · hash-chained audit'],
+        ['fairlead.exe   ', 'local model router · falls back when the cloud is lost'],
+        ['windlass.exe   ', 'large language models on an ordinary PC'],
+        ['capstan.exe    ', 'browser-based recorder and multitrack video editor'],
+        ['shellback.exe  ', 'local-first skills · aggregate-only supervisor views'],
+        ['snapshackle.exe', 'screenshots · redaction · search text inside images'],
+        ['scrimshaw.exe  ', 'e-learning authoring · publishes SCORM'],
+        ['bowerbird.exe  ', 'local file intelligence · approval-gated renames with undo'],
+      ];
+      for (const [f, what] of tools) { print(`  <span class="hi">${f}</span> <span class="dim">↳</span> ${esc(what)}`); await wait(120); }
+      print(`\n  about 1,670 commits · 20 repositories · about two weeks
+  no admin rights · no installs · tested on Nautilus with CAC on NMCI`);
+      await wait(400);
+      await talk('NEO', 'Guns. Lots of guns.');
+      await talk('MORPHEUS', 'Except these ones run on the machine they said could run nothing.');
       return null;
     },
 
@@ -851,6 +879,8 @@
   const INTENTS = [
     {re: /\b(are|r) (we|us|you|i) (all )?(slaves?|prisoners?|free)\b|\bslaves?\b/, run: async () => CMDS.areweslaves()},
     {re: /\b(are|r) (we|you|i) (all )?(in|inside) (the )?matrix\b|\bin the matrix\b/, run: async () => CMDS.areweinthematrix()},
+    {re: /\b(fleet ?hack(er)?|hackathon|semaphore|lazarette|halyard|packetrat|fairlead|windlass|capstan|shellback|snapshackle|scrimshaw|bowerbird|eight bells|tools?)\b/,
+     run: async () => { await talk('MORPHEUS', "You want to see what he built. Tank, open the armory."); return CMDS.fleethacker(); }},
     {re: /\b(hir(e|ing)|job|role|position|recruit|opportunit|interview|resume|cv|freelance|contract|available|work with|team)\b/,
      run: async () => { await talk('MORPHEUS', "You're not here by accident. You're looking for him."); await talk('MORPHEUS', "I'll patch you through."); return CMDS.findme(); }},
     {re: /\b(aws|cloud|lambda|python|sql|postgres|stack|tech|skills?|code|coding|program(ming)?|language|devops|terraform|iac)\b/,
