@@ -150,9 +150,9 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 ### 📝 Latest activity
 
 <!--START_SECTION:activity-->
-1. 🎉 Merged PR [#54](https://github.com/fleethacker-data-crucible/Commissioning/pull/54) in [fleethacker-data-crucible/Commissioning](https://github.com/fleethacker-data-crucible/Commissioning)
-2. 🎉 Merged PR [#50](https://github.com/fleethacker-data-crucible/Commissioning/pull/50) in [fleethacker-data-crucible/Commissioning](https://github.com/fleethacker-data-crucible/Commissioning)
-3. 🎉 Merged PR [#53](https://github.com/fleethacker-data-crucible/Commissioning/pull/53) in [fleethacker-data-crucible/Commissioning](https://github.com/fleethacker-data-crucible/Commissioning)
+1. 💪 Opened PR [#63](https://github.com/fleethacker-data-crucible/edge-ops/pull/63) in [fleethacker-data-crucible/edge-ops](https://github.com/fleethacker-data-crucible/edge-ops)
+2. 💪 Opened PR [#92](https://github.com/fleethacker-data-crucible/Semaphore/pull/92) in [fleethacker-data-crucible/Semaphore](https://github.com/fleethacker-data-crucible/Semaphore)
+3. ℹ️ Labeled issue [#91](https://github.com/fleethacker-data-crucible/Semaphore/issues/91) in [fleethacker-data-crucible/Semaphore](https://github.com/fleethacker-data-crucible/Semaphore)
 <!--END_SECTION:activity-->
 
 ---
