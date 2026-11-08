@@ -150,9 +150,9 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 ### 📝 Latest activity
 
 <!--START_SECTION:activity-->
-1. 💪 Opened PR [#40](https://github.com/fleethacker-data-crucible/talkforge/pull/40) in [fleethacker-data-crucible/talkforge](https://github.com/fleethacker-data-crucible/talkforge)
-2. 💪 Opened PR [#93](https://github.com/fleethacker-data-crucible/Semaphore/pull/93) in [fleethacker-data-crucible/Semaphore](https://github.com/fleethacker-data-crucible/Semaphore)
-3. 🎉 Merged PR [#58](https://github.com/fleethacker-data-crucible/Semaphore/pull/58) in [fleethacker-data-crucible/Semaphore](https://github.com/fleethacker-data-crucible/Semaphore)
+1. 🗣 Commented on [#64](https://github.com/fleethacker-data-crucible/edge-ops/pull/64#issuecomment-6714189358) in [fleethacker-data-crucible/edge-ops](https://github.com/fleethacker-data-crucible/edge-ops)
+2. 🗣 Commented on [#63](https://github.com/fleethacker-data-crucible/edge-ops/pull/63#issuecomment-6714189206) in [fleethacker-data-crucible/edge-ops](https://github.com/fleethacker-data-crucible/edge-ops)
+3. 💪 Opened PR [#64](https://github.com/fleethacker-data-crucible/edge-ops/pull/64) in [fleethacker-data-crucible/edge-ops](https://github.com/fleethacker-data-crucible/edge-ops)
 <!--END_SECTION:activity-->
 
 ---
