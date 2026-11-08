@@ -150,9 +150,9 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 ### 📝 Latest activity
 
 <!--START_SECTION:activity-->
-1. 🗣 Commented on [#64](https://github.com/fleethacker-data-crucible/edge-ops/pull/64#issuecomment-6714189358) in [fleethacker-data-crucible/edge-ops](https://github.com/fleethacker-data-crucible/edge-ops)
-2. 🗣 Commented on [#63](https://github.com/fleethacker-data-crucible/edge-ops/pull/63#issuecomment-6714189206) in [fleethacker-data-crucible/edge-ops](https://github.com/fleethacker-data-crucible/edge-ops)
-3. 💪 Opened PR [#64](https://github.com/fleethacker-data-crucible/edge-ops/pull/64) in [fleethacker-data-crucible/edge-ops](https://github.com/fleethacker-data-crucible/edge-ops)
+1. ❌ Closed PR [#63](https://github.com/fleethacker-data-crucible/Halyard/pull/63) in [fleethacker-data-crucible/Halyard](https://github.com/fleethacker-data-crucible/Halyard)
+2. ❌ Closed PR [#64](https://github.com/fleethacker-data-crucible/Halyard/pull/64) in [fleethacker-data-crucible/Halyard](https://github.com/fleethacker-data-crucible/Halyard)
+3. ❌ Closed PR [#65](https://github.com/fleethacker-data-crucible/Halyard/pull/65) in [fleethacker-data-crucible/Halyard](https://github.com/fleethacker-data-crucible/Halyard)
 <!--END_SECTION:activity-->
 
 ---
