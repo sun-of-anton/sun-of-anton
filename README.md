@@ -150,9 +150,9 @@ Built a knowledge-gap analysis tool with competency data and spider-graph visual
 ### 📝 Latest activity
 
 <!--START_SECTION:activity-->
-1. ❌ Closed PR [#63](https://github.com/fleethacker-data-crucible/Halyard/pull/63) in [fleethacker-data-crucible/Halyard](https://github.com/fleethacker-data-crucible/Halyard)
-2. ❌ Closed PR [#64](https://github.com/fleethacker-data-crucible/Halyard/pull/64) in [fleethacker-data-crucible/Halyard](https://github.com/fleethacker-data-crucible/Halyard)
-3. ❌ Closed PR [#65](https://github.com/fleethacker-data-crucible/Halyard/pull/65) in [fleethacker-data-crucible/Halyard](https://github.com/fleethacker-data-crucible/Halyard)
+1. 🎉 Merged PR [#104](https://github.com/fleethacker-data-crucible/Semaphore/pull/104) in [fleethacker-data-crucible/Semaphore](https://github.com/fleethacker-data-crucible/Semaphore)
+2. 💪 Opened PR [#104](https://github.com/fleethacker-data-crucible/Semaphore/pull/104) in [fleethacker-data-crucible/Semaphore](https://github.com/fleethacker-data-crucible/Semaphore)
+3. 🎉 Merged PR [#103](https://github.com/fleethacker-data-crucible/Semaphore/pull/103) in [fleethacker-data-crucible/Semaphore](https://github.com/fleethacker-data-crucible/Semaphore)
 <!--END_SECTION:activity-->
 
 ---
